@@ -1,3 +1,36 @@
-<h3>Welcome!</h3>
+<p class="lead">Listing of Posts<hr/></p>
 
-<p>This is the Postit template. You've access the PostsController, index action. This is the index template. Find me under app/views/posts folder.</p>
+<style>
+#table, tr, td {
+	border: 2px solid blue;
+}
+
+#headrow {
+	border: 4px solid lightblue; padding: 10px;
+}
+
+#bodyrow {
+	border: 2px solid gray; padding: 5px;
+}
+</style>
+
+<div class="row">
+<table>
+	<tr id="headrow">
+		<th>Post ID</th>
+		<th>URL</th>
+		<th>Title</th>
+		<th>Description</th>
+	</tr>
+	<% @posts.each do |p| %>
+	<tr>
+		<td id="bodyrow"><%= p.id %></td>
+		<td id="bodyrow"><%= p.url %></td>
+		<td id="bodyrow"><%= p.title %></td>
+		<td id="bodyrow"><%= p.description %></td>
+	</tr>
+	<% end %>
+</table>
+</div>
+
+

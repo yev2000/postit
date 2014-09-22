@@ -1,0 +1,44 @@
+<h3><%= "Post details for post " + '#' + "#{@post.id}" %></h3>
+
+<style>
+	#table, th, td {
+			padding: 15px;
+			border: 1px solid green;
+	}
+
+	#cellcoll {
+		background-color: lightblue;
+	}
+
+	#errstyle {
+		color: red;
+	}
+</style>
+
+<table>
+	<tr>
+		<th>Field</th>
+		<th>Value</th>
+	</tr>
+	<tr>
+		<td id="cellcoll">Posted by</td>
+		<% if @post.creator %>
+			<td><%= @post.creator.username %></td>
+		<% else %>
+			<td id="errstyle">No one posted this!</td>
+		<% end %>
+	</tr>
+	<tr>
+		<td id="cellcoll">URL</td>
+		<td><%= @post.url %></td>
+	</tr>
+	<tr>
+		<td id="cellcoll">Title</td>
+		<td><%= @post.title %></td>
+	</tr>
+	<tr>
+		<td id="cellcoll">Description</td>
+		<td><%= @post.description %></td>
+	</tr>
+</table>
+
