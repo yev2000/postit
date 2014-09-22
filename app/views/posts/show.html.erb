@@ -1,4 +1,18 @@
-<h3><%= "Post details for post " + '#' + "#{@post.id}" %></h3>
+<p>
+<%= render @post.categories %>
+</p>
+
+<%= render "shared/content_title", title_var: @post.title %>
+
+<p>
+	<%= @post.description %>
+</p>
+<hr/>
+
+
+
+
+<h4><%= "Post details for post " + '#' + "#{@post.id}" %></h4>
 
 <style>
 	#table, th, td {
