@@ -1,3 +1,8 @@
+<!-- here we can create a button to edit the post -->
+<p class="pull-right">
+	[<%= link_to "Edit Post", edit_post_path(@post)  %>]
+</p>
+
 <p>
 <%= render @post.categories %>
 </p>
@@ -10,6 +15,7 @@
 <hr/>
 
 
+<hr/>
 
 
 <h4><%= "Post details for post " + '#' + "#{@post.id}" %></h4>

@@ -14,6 +14,12 @@
 					<span>
 						<%= link_to("#{p.comments.size} comments", post_path(p)) %>
 					</span>
+					
+					<span>
+						<div style="padding: 10px;">
+							<%= link_to "Edit Post", edit_post_path(p) %>
+						</div>
+					</span>
 				</small>
 			</p>
 		</div>
