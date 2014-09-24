@@ -3,10 +3,6 @@ class CategoriesController < ApplicationController
 	before_action :set_category, only: [:show, :edit, :update]
 
 	def show
-		if @category.nil?
-			## explicitly redirecting to posts path because we don't have a categories index yet
-			redirect_to posts_path
-    	end
 	end
 
 	def index
@@ -17,7 +13,7 @@ class CategoriesController < ApplicationController
 	end
 
 	def create
-		@category = Category.create(category_params)
+		@category = Category.new(category_params)
 
 		if @category.save
 			flash[:notice] = "Your category (#{@category.name}) was saved."
@@ -44,8 +40,8 @@ class CategoriesController < ApplicationController
 		begin
 			@category = Category.find(params[:id])
 		rescue ActiveRecord::RecordNotFound
-			@post = nil
-			flash[:notice] = "There is no category with ID #{params[:id]}.  Showing all categories instead."
+			flash[:notice] = "There is no category with ID #{params[:id]}.  Showing all posts instead."
+			redirect_to posts_path
 		end
 	end
 end

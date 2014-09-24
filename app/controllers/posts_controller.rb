@@ -11,6 +11,10 @@ class PostsController < ApplicationController
     if @post.nil?
       redirect_to posts_path
     end
+    ### IS THIS CORRECT ???
+    ### Do we create a blank comment that will
+    ### be picked up for new comment creation?
+    @comment = Comment.new
   end
 
   def new

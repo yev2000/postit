@@ -1,19 +1,34 @@
 <!-- here we can create a button to edit the post -->
 
-<pre><code>
-	def set_post
-		begin
-			@post = Post.find(params[:id])
-		rescue ActiveRecord::RecordNotFound
-			@post = nil
-			flash[:notice] = "There is no post with ID #{params[:id]}.  Showing all posts instead."
-		end
-	end
-</code></pre>
-
 <p class="pull-right">
 	[<%= link_to "Edit Post", edit_post_path(@post)  %>]
+	[<%= link_to "Back to all Posts", posts_path %>]
 </p>
+
+<!-- we may have errors coming in from a failed comment creation
+	so try to set them here.
+	Unclear what is the best design to send the errors through
+	since @post will not have errors.  We'd have to attach to
+	some other instance variable? -->
+<!--
+< render "shared/errors_display", errors_set: SOPMETHING HERE >
+-->
+
+<div class="well">
+	<!-- WHERE is @comment set? -->
+	<!-- how do we make submit perform the proper path to the comments creation? -->
+	<h5>Create a comment:</h5>
+	<%= form_for [@post, @comment] do |f| %>
+		<% if @comment.errors.any? %>
+			<%= render "shared/errors_display", errors_set: @comment.errors %>
+		<% end %>
+		<div class="control-group">
+			<%= f.text_area :body, rows: 5 %>
+		</div>
+
+		<%= f.submit "Add Comment", class: "btn btn-primary" %>
+	<% end %>
+</div>
 
 <p>
 <%= render @post.categories %>

@@ -1,9 +1,15 @@
-<!-- here we can create a button to edit the post -->
+<% all_posts = link_to("All Posts", posts_path) %>
 
+<!-- here we can create a button to edit the category -->
 <p class="pull-right">
 	[<%= link_to "Edit Category", edit_category_path(@category)  %>]
 </p>
 
-<%= render "shared/content_title", title_var: @category.name %>
+<%= render "shared/content_title",
+	title_var: "#{all_posts} &raquo; #{@category.name}".html_safe %>
+
+<!-- iterate over the posts associated with this category and show the posts -->
+<!-- but let's do this in some shared partial -->
+<%= render "posts/post_list", post_list: @category.posts %>
 
 <hr/>
