@@ -1,18 +1,8 @@
-<%= render "shared/content_title", title_var: @edit_title %>
+<%= render "shared/content_title", title_var: @top_title %>
 
-<!-- display error messages -->
-<% if @post.errors.any? %>
-<div class="row">
-	<div class="alert alert-error span8">
-		<h5>There were some errors; please fix them</h5>
-		<ul>
-			<% @post.errors.full_messages.each do |msg| %>
-				<li><%= msg %></li>
-			<% end %>
-		</ul>
-	</div>
-</div>
-<% end %>
+<% create_button_string = @post.new_record? ? "Create Post" : "Update Post" %>
+
+<%= render "shared/errors_display", errors_set: @post.errors %>
 
 <div class="well">
 
@@ -30,7 +20,7 @@
 			<%= f.text_area :description, rows: 5 %>
 		</div>
 
-		<%= f.submit @create_button_string || "Submit", 
+		<%= f.submit create_button_string || "Submit", 
 			class: "btn btn-primary" %>
 	<% end %>
 

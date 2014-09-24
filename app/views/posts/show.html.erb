@@ -1,4 +1,16 @@
 <!-- here we can create a button to edit the post -->
+
+<pre><code>
+	def set_post
+		begin
+			@post = Post.find(params[:id])
+		rescue ActiveRecord::RecordNotFound
+			@post = nil
+			flash[:notice] = "There is no post with ID #{params[:id]}.  Showing all posts instead."
+		end
+	end
+</code></pre>
+
 <p class="pull-right">
 	[<%= link_to "Edit Post", edit_post_path(@post)  %>]
 </p>

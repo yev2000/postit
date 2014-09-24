@@ -1,0 +1,20 @@
+<%= render "shared/content_title", title_var: @top_title %>
+
+<% create_button_string = @category.new_record? ? "Create Category" : "Update Category" %>
+
+<!-- display error messages -->
+<%= render "shared/errors_display", errors_set: @category.errors %>
+
+<div class="well">
+
+	<%= form_for @category do |f| %>
+		<div class="control-group">
+			<%= f.label :name %>
+			<%= f.text_field :name %>
+		</div>
+
+		<%= f.submit create_button_string || "Submit", 
+			class: "btn btn-primary" %>
+	<% end %>
+
+</div>

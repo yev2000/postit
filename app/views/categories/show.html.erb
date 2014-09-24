@@ -1,0 +1,9 @@
+<!-- here we can create a button to edit the post -->
+
+<p class="pull-right">
+	[<%= link_to "Edit Category", edit_category_path(@category)  %>]
+</p>
+
+<%= render "shared/content_title", title_var: @category.name %>
+
+<hr/>
