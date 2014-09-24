@@ -6,4 +6,8 @@ PostitTemplate::Application.routes.draw do
   end
   
   resources :categories, except: [:destroy]
+
+  get "usersearch", to: "search#user"
+  get "postsearch", to: "search#post"
+
 end

@@ -1,0 +1,38 @@
+<h1>you got to the user search form</h1>
+
+<%= form_tag(usersearch_path, :method => "get") do %>
+	<div class="control-group">
+		<%= label_tag(:uname, "Search for user:") %>
+		<%= text_field_tag(:uname, params[:uname] || "<enter search here>") %>
+	</div>
+
+	<div class="control-group">
+		<%= label_tag(:with_posts, "With at least one post") %>
+		<%= check_box_tag(:with_posts, "1", @with_posts_val == "1") %>
+	</div>
+
+	<div class="control-group">
+		<%= label_tag(:sorting, "Sort by") %>
+		<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
+	</div>
+
+	<br>
+	<%= submit_tag("Search") %>
+<% end %>
+
+
+
+<!-- we may already have search results, so display them here -->
+<br/><br/>
+<hr/>
+
+<% if @search_results.size > 0 %>
+	<%= "#{@search_results.size} " + "user".pluralize(@search_results.size) + " found." %>
+	<ul>
+	<% @search_results.each do |u| %>
+		<li><%= "#{u.username} (with #{u.posts.size} posts)" %></li>
+	<% end %>
+	</ul>
+<% end %>
+
+
