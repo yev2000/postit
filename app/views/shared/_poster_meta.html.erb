@@ -1,0 +1,10 @@
+<!-- this contains the one-liner of HTML that can be reused
+	in listings of posts and comments.  It shows who made the post or comment
+	and at what time (timestamp).  What we require are a few variables
+	passed in to tell us the "byline", and an object that is expected to have a creator field and a created at field -->
+
+
+<span class='quiet'><%= var_by %></span>
+<%= link_to var_obj.creator ? var_obj.creator.username : "** No user **", '' %>
+<small>at <%= var_obj.created_at %></small>&nbsp;&nbsp;&nbsp;
+

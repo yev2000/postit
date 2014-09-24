@@ -1,4 +1,4 @@
-<%= render "shared/content_title", title_var: title_var %>
+<%= render "shared/content_title", {title_var: title_var, url_var: local_assigns[:url_var]} %>
 
 <% create_button_string = @category.new_record? ? "Create Category" : "Update Category" %>
 

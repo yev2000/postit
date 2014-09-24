@@ -1,4 +1,4 @@
-<%= render "shared/content_title", title_var: @top_title %>
+<%= render "shared/content_title", {title_var: title_var, url_var: local_assigns[:url_var]} %>
 
 <% create_button_string = @post.new_record? ? "Create Post" : "Update Post" %>
 
@@ -19,6 +19,21 @@
 			<%= f.label :description %>
 			<%= f.text_area :description, rows: 5 %>
 		</div>
+
+		<!-- selector for the category -->
+		<!-- f.checkboxes  -->
+		<!-- ### use form helpers for check boxes for categories -->
+<!--
+	<% if false %>
+		<select name="post[category_ids][]" multiple="multiple">
+			<% Category.all.each do |c| %>
+				
+			<% end %>
+		</select>
+	<% end %>
+-->
+		
+
 
 		<%= f.submit create_button_string || "Submit", 
 			class: "btn btn-primary" %>

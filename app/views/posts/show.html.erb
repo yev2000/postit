@@ -1,52 +1,47 @@
 <!-- here we can create a button to edit the post -->
-
-<p class="pull-right">
-	[<%= link_to "Edit Post", edit_post_path(@post)  %>]
-	[<%= link_to "Back to all Posts", posts_path %>]
-</p>
-
-<!-- we may have errors coming in from a failed comment creation
-	so try to set them here.
-	Unclear what is the best design to send the errors through
-	since @post will not have errors.  We'd have to attach to
-	some other instance variable? -->
-<!--
-< render "shared/errors_display", errors_set: SOPMETHING HERE >
--->
-
-<div class="well">
-	<!-- WHERE is @comment set? -->
-	<!-- how do we make submit perform the proper path to the comments creation? -->
-	<h5>Create a comment:</h5>
-	<%= form_for [@post, @comment] do |f| %>
-		<% if @comment.errors.any? %>
-			<%= render "shared/errors_display", errors_set: @comment.errors %>
-		<% end %>
-		<div class="control-group">
-			<%= f.text_area :body, rows: 5 %>
-		</div>
-
-		<%= f.submit "Add Comment", class: "btn btn-primary" %>
-	<% end %>
-</div>
-
 <p>
 <%= render @post.categories %>
 </p>
 
-<%= render "shared/content_title", title_var: @post.title %>
+<p class="pull-right">
+	[<%= link_to "Edit Post", edit_post_path(@post) %>]
+	[<%= link_to "Back to all Posts", posts_path %>]
+</p>
+
+<%= render "shared/content_title", {title_var: @post.title, url_var: fix_url(@post.url)} %>
+
 
 <p>
 	<%= @post.description %>
 </p>
 <hr/>
 
+	<%= form_for [@post, @comment] do |f| %>
+		<%= render "shared/errors_display", errors_set: @comment.errors %>
+
+		<div class="control-group">
+			<%= f.label :body, "Leave a comment:" %>
+			<%= f.text_area :body, rows: 5, class: "span4"  %>
+		</div>
+
+		<%= f.submit "Add Comment", class: "btn btn-primary" %>
+	<% end %>
 
 <hr/>
 
+<% if @post.comments.size > 0 %>
+	<h5>Comments:</h5>
+	<% @post.comments.each do |c| %>
+	<div class="well span8">
+		<em>"<%= c.body %>"</em>
+		<%= render "shared/poster_meta", {var_by: "by", var_obj: c} %>
+	</div>
+	<% end %>
+<% end %>
 
-<h4><%= "Post details for post " + '#' + "#{@post.id}" %></h4>
+<!-- the following is really just extra (debug-level) details info -->
 
+<!--
 <style>
 	#table, th, td {
 			padding: 15px;
@@ -61,6 +56,9 @@
 		color: red;
 	}
 </style>
+-->
+<% if false %>
+<h4><%= "Post details for post " + '#' + "#{@post.id}" %></h4>
 
 <table>
 	<tr>
@@ -89,3 +87,4 @@
 	</tr>
 </table>
 
+<% end %>

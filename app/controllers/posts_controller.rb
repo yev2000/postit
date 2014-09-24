@@ -7,10 +7,8 @@ class PostsController < ApplicationController
   end
 
   def show
-  	# this is handled by before_action to set post instance var
-    if @post.nil?
-      redirect_to posts_path
-    end
+    # setting @post this is handled by before_action to set the post instance var
+
     ### IS THIS CORRECT ???
     ### Do we create a blank comment that will
     ### be picked up for new comment creation?
@@ -24,9 +22,9 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     
-    # set the user ID of the post to be the poster...
-    # who is the user?
-    # TBD : there is no user specified right now so we just use the first user
+    ### set the user ID of the post to be the poster...
+    ### who is the user?
+    ### TBD : there is no user specified right now so we just use the first user
     @post.creator = User.first
 
     if @post.save
@@ -35,16 +33,10 @@ class PostsController < ApplicationController
     else
       render :new
     end
-  end
+end
 
   def edit
-    # setting @post this is handled by before_action to set post instance var
-
-    # however we can check to see if the post is valid or not in case someone
-    # manually entered a URL with an invalid post ID.
-    if @post.nil?
-      redirect_to posts_path
-    end
+    # setting @post this is handled by before_action to set the post instance var
   end
 
   def update
@@ -59,15 +51,15 @@ class PostsController < ApplicationController
   private
 
     def post_params
-      params.require(:post).permit(:url, :title, :description)
+      params.require(:post).permit(:url, :title, :description, category_ids: [])
     end
 
     def set_post
       begin
         @post = Post.find(params[:id])
       rescue ActiveRecord::RecordNotFound
-        @post = nil
         flash[:notice] = "There is no post with ID #{params[:id]}.  Showing all posts instead."
+        redirect_to posts_path
       end
     end
 

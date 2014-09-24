@@ -5,12 +5,15 @@ class CommentsController < ApplicationController
 		begin
 			@post = Post.find(params[:post_id])
 		rescue ActiveRecord::RecordNotFound
+			flash[:notice] = "Could not find post with ID #{:post_id}"
 			redirect_to posts_path
 		end
 
 		@comment = @post.comments.build(comment_params)
-
+		
 		## at some point we have to hook up to the right user
+		@comment.creator = User.first
+
 		
 		if @comment.save
 			flash[:notice] = "Your comment was saved."
