@@ -9,9 +9,8 @@ class PostsController < ApplicationController
   def show
     # setting @post this is handled by before_action to set the post instance var
 
-    ### IS THIS CORRECT ???
-    ### Do we create a blank comment that will
-    ### be picked up for new comment creation?
+    # we create a new comment instance variable here because it's needed
+    # by the show posts page (the new comment form) and the comments controller create logic.
     @comment = Comment.new
   end
 

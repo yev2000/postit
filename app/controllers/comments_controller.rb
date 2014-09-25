@@ -11,17 +11,17 @@ class CommentsController < ApplicationController
 
 		@comment = @post.comments.build(comment_params)
 		
-		## at some point we have to hook up to the right user
+		### at some point we have to hook up to the right user
 		@comment.creator = User.first
 
 		
 		if @comment.save
 			flash[:notice] = "Your comment was saved."
-			## tricky to render the post form because it has to be for the specific post
 			redirect_to post_path(@post)
 		else
-			## want to render the same page we were on...
-			## render posts_path
+			# we want to render the same page we came in from
+			# and since we only allow creation of comments from the
+			# show specific post page, that's posts/show
 			render "posts/show"
 		end
 	end
