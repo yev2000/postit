@@ -1,5 +1,7 @@
-class SearchController < ApplicationController
-	def user
+class UsersController < ApplicationController
+	before_action :set_user, only: [:posts]
+
+	def search
 		# used to search for users
 
 		@sort_options_array = [["Name" , 1], ["Number of Posts", 2], ["Reverse Name", 3]]
@@ -35,20 +37,31 @@ class SearchController < ApplicationController
 
 			# now have to consider how to sort
 			
-			case @sorting_val
-			when 1
+			case @sort_options_array.rassoc(@sorting_val)[0]
+			when "Name"
 				@search_results.sort! { |x,y| x.username <=> y.username }
-			when 2
-				@search_results.sort! { |x,y| x.posts.length <=> y.posts.length }
-			when 3
+			when "Number of Posts"
+				@search_results.sort! { |x,y| y.posts.length <=> x.posts.length }
+			when "Reverse Name"
 				@search_results.sort! { |x,y| y.username <=> x.username }
 			end
 		end
-
 	end
 
-	def post
-		# used to search for posts
-	end	
+	def posts
+		# list the posts which have been posted by a particular user
+		@post_list = @user.posts
+	end
+
+	private
+
+    def set_user
+      begin
+        @user = User.find(params[:id])
+      rescue ActiveRecord::RecordNotFound
+        flash[:notice] = "There is no user with ID #{params[:id]}.  Showing user search instead." 
+        redirect_to search_users_path
+      end
+    end
 end
 

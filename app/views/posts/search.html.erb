@@ -1,0 +1,37 @@
+<%= render "shared/content_title", title_var: "Post Search" %>
+
+<%= form_tag(search_posts_path, :method => "get") do %>
+	<div class="control-group">
+		<%= label_tag(:uname, "Search for posts from a user:") %>
+		<%= text_field_tag(:uname, params[:uname] || "<enter poster name here>") %>
+	</div>
+
+	<div class="control-group">
+		<%= label_tag(:with_comments, "With at least one comment") %>
+		<%= check_box_tag(:with_comments, "1", @with_comments_val == "1") %>
+	</div>
+
+	<div class="control-group">
+		<%= label_tag(:with_comment_text, "Containing this in the comment") %>
+		<%= text_field_tag(:with_comment_text, params[:with_comment_text] || "") %>
+	</div>
+
+	<div class="control-group">
+		<%= label_tag(:sorting, "Sort by") %>
+		<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
+	</div>
+
+	<br>
+	<%= submit_tag("Search") %>
+<% end %>
+
+<!-- we may already have search results, so display them here -->
+<br/><br/>
+<hr/>
+
+<% if @search_results.size > 0 %>
+	<%= "#{@search_results.size} " + "post".pluralize(@search_results.size) + " found." %>
+
+	<%= render "posts/post_list", post_list: @search_results %>
+
+<% end %>

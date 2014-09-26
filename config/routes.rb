@@ -3,11 +3,22 @@ PostitTemplate::Application.routes.draw do
 
   resources :posts, except: [:destroy] do
   	resources :comments, only: [:create]
+  	collection do
+  		get "search"
+  	end
   end
   
-  resources :categories, except: [:destroy]
+  resources :users, only: [] do
+  	collection do
+  		get "search"
+    end
 
-  get "usersearch", to: "search#user"
-  get "postsearch", to: "search#post"
+    member do
+      get "posts"
+  	end
+
+  end
+
+  resources :categories, except: [:destroy]
 
 end
