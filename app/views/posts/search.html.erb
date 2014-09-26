@@ -1,13 +1,13 @@
 <%= render "shared/content_title", title_var: "Post Search" %>
 
-<%= form_tag(search_posts_path, :method => "get") do %>
+<%= form_tag(search_posts_path, :method => "get", class: "well form-inline") do %>
 	<div class="control-group">
 		<%= label_tag(:uname, "Search for posts from a user:") %>
 		<%= text_field_tag(:uname, params[:uname] || "<enter poster name here>") %>
 	</div>
 
 	<div class="control-group">
-		<%= label_tag(:with_comments, "With at least one comment", class: "checkbox inline") %>
+		<%= label_tag(:with_comments, "With at least one comment") %>
 		<%= check_box_tag(:with_comments, "1", @with_comments_val == "1") %>
 	</div>
 
@@ -17,7 +17,7 @@
 	</div>
 
 	<div class="control-group">
-		<%= label_tag(:sorting, "Sort by") %>
+		<%= label_tag(:sorting, "Sort results by") %>
 		<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
 	</div>
 
@@ -26,12 +26,18 @@
 <% end %>
 
 <!-- we may already have search results, so display them here -->
-<br/><br/>
 <hr/>
 
-<% if @search_results.size > 0 %>
-	<%= "#{@search_results.size} " + "post".pluralize(@search_results.size) + " found." %>
+<% if (params[:uname] && (params[:uname].size > 0)) || (params[:with_comment_text] && (params[:with_comment_text].size > 0)) %>
+	<!-- this is a hint that a search has occurred -->
+	<!-- now we have to figure out whether any results matched our query -->
+	<% if @search_results.size == 0 %>
+		<!-- no results match, so give feedback that we DID do a search but nothing was found -->
+		<h4>No posts match your search</h4>
+	<% else %>
+		<h4><%= "#{@search_results.size} " + "post".pluralize(@search_results.size) + " found." %></h4>
 
-	<%= render "posts/post_list", post_list: @search_results %>
+		<%= render "posts/post_list", post_list: @search_results %>
+	<% end %>
 
 <% end %>

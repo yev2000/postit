@@ -24,11 +24,13 @@ class PostsController < ApplicationController
     ### set the user ID of the post to be the poster...
     ### who is the user?
     ### TBD : there is no user specified right now so we just pick a user at random
-
-    @post.creator = User.find(rand(User.all.size - 1) + 1)
-
-    ### interesting here that if the creator is not found, I don't see errors text.  Instead on Heroku
-    ### I get a failure.
+    begin
+      @post.creator = User.find(rand(User.all.size - 1) + 1)
+    rescue ActiveRecord::RecordNotFound
+      # this should never happen but just in case some IDs are not consecutive, at least
+      # let's fail so that we don't generate an exception
+      @post.creator = User.first
+    end
 
     if @post.save
       flash[:notice] = "Your post was saved."
