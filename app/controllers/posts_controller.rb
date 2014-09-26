@@ -25,7 +25,10 @@ class PostsController < ApplicationController
     ### who is the user?
     ### TBD : there is no user specified right now so we just pick a user at random
 
-    @post.creator = User.find(rand(User.all.size))
+    @post.creator = User.find(rand(User.all.size - 1) + 1)
+
+    ### interesting here that if the creator is not found, I don't see errors text.  Instead on Heroku
+    ### I get a failure.
 
     if @post.save
       flash[:notice] = "Your post was saved."
