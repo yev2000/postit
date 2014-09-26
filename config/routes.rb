@@ -8,7 +8,7 @@ PostitTemplate::Application.routes.draw do
   	end
   end
   
-  resources :users, only: [] do
+  resources :users, only: [:new, :create] do
   	collection do
   		get "search"
     end

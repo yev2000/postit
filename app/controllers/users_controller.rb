@@ -1,6 +1,24 @@
 class UsersController < ApplicationController
 	before_action :set_user, only: [:posts]
 
+	def new
+		@user = User.new
+	end
+
+	def create
+	    @user = User.new(user_params)
+    
+	    if @user.save
+	      flash[:notice] = "Your user #{@user.username} was saved."
+
+	      # this is a bit of a hack, but we redirect to the posts index rather than a (nonexistent)
+	      # users index.
+	      redirect_to posts_path
+	    else
+	      render :new
+	    end
+	end
+
 	def search
 		# used to search for users
 
@@ -54,6 +72,10 @@ class UsersController < ApplicationController
 	end
 
 	private
+
+    def user_params
+      params.require(:user).permit(:username)
+    end
 
     def set_user
       begin

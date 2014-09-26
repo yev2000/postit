@@ -21,25 +21,32 @@
 <% end %>
 
 <!-- we may already have search results, so display them here -->
-<br/><br/>
 <hr/>
 
-<% if @search_results.size > 0 %>
-	<%= "#{@search_results.size} " + "user".pluralize(@search_results.size) + " found." %>
-	<ul>
-	<% @search_results.each do |u| %>
-		<li>
-			<%= "#{u.username} (with " %>
-			<% post_string = "#{u.posts.size} " + "post".pluralize(u.posts.size) %>
-			<% if u.posts.size > 0 %>
-				<%= link_to post_string, posts_user_path(u) %>
-			<% else %>
-				<%= post_string %>
-			<% end %>
-			<%= ")" %>
-		</li>
+<% if params[:uname] && (params[:uname].size > 0) %>
+	<!-- this is a hint that a search has occurred -->
+	<!-- now we have to figure out whether any results matched our query -->
+	<% if @search_results.size == 0 %>
+		<!-- no results match, so give feedback that we DID do a search but nothing was found -->
+		<h4>No users match your search</h4>
+	<% else %>
+		<!-- we found at least one match, so let's say so -->
+		<h4><%= "#{@search_results.size} " + "user".pluralize(@search_results.size) + " found." %></h4>
+		<ul>
+		<% @search_results.each do |u| %>
+			<li>
+				<%= "#{u.username} (with " %>
+				<% post_string = "#{u.posts.size} " + "post".pluralize(u.posts.size) %>
+				<% if u.posts.size > 0 %>
+					<%= link_to post_string, posts_user_path(u) %>
+				<% else %>
+					<%= post_string %>
+				<% end %>
+				<%= ")" %>
+			</li>
+		<% end %>
+		</ul>
 	<% end %>
-	</ul>
 <% end %>
 
 

@@ -23,8 +23,9 @@ class PostsController < ApplicationController
     
     ### set the user ID of the post to be the poster...
     ### who is the user?
-    ### TBD : there is no user specified right now so we just use the first user
-    @post.creator = User.first
+    ### TBD : there is no user specified right now so we just pick a user at random
+
+    @post.creator = User.find(rand(User.all.size))
 
     if @post.save
       flash[:notice] = "Your post was saved."

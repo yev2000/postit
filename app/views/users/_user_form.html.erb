@@ -1,0 +1,20 @@
+<%= render "shared/content_title", {title_var: title_var, url_var: local_assigns[:url_var]} %>
+
+<% create_button_string = @user.new_record? ? "Create User" : "Update User" %>
+
+<!-- display error messages -->
+<%= render "shared/errors_display", errors_set: @user.errors %>
+
+<div class="well">
+
+	<%= form_for @user do |f| %>
+		<div class="control-group">
+			<%= f.label :username %>
+			<%= f.text_field :username %>
+		</div>
+
+		<%= f.submit create_button_string || "Submit", 
+			class: "btn btn-success" %>
+	<% end %>
+
+</div>
