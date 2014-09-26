@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="control-group">
-		<%= label_tag(:with_comments, "With at least one comment") %>
+		<%= label_tag(:with_comments, "With at least one comment", class: "checkbox inline") %>
 		<%= check_box_tag(:with_comments, "1", @with_comments_val == "1") %>
 	</div>
 
