@@ -40,18 +40,28 @@ class UsersController < ApplicationController
 		end
 
 		if params[:uname]
-			## here we are looking for any users matching the search expression		
-			User.all.each do |u|
-				if u.username.match(params[:uname])
-					if @with_posts_val == "1"
-						if u.posts.length > 0
-							@search_results << u
-						end
-					else
-						@search_results << u
-					end
-				end
-			end
+			# here we are looking for any users matching the search expression		
+
+			# The original approach used User.all.each to iterate over all of the users.
+      		# But this is very inefficient if the system has thousands of users since all
+      		# will be read into memory.
+      		# The more efficient approach pointed out by Brandon C. is to use
+      		# matching_users = <class>.where("<field> LIKE #{params[:uname].gsub('*', '%').gsub('?', '_')}")
+      		# and furthermore, to protect against SQL injection, it would be
+      		# matching_posts = <class>.where("<field> LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+      		@search_results = User.where("username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+
+      		# If we are also looking for users with at least one post, we need to iterate over the search
+      		# results and cull the resulting set by removing ones without any posts.
+	      	if @with_posts_val == "1"
+          		@search_results.delete_if do |u|
+            		if u.posts.length > 0
+              			false
+              		else
+            			true
+              	    end # comments length
+          		end #delete_if
+        	end #comments_with_val == 1
 
 			# now have to consider how to sort
 			

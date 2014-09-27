@@ -75,37 +75,42 @@ end
     end
 
   if params[:uname]
-      ## here we are looking for any users matching the search expression   
-      Post.all.each do |p|
-        if p.creator && p.creator.username.match(params[:uname])
-          if @with_comments_val == "1"
-            if p.comments.length > 0
-              @search_results << p
-            end
-          else
-            @search_results << p
-          end
-        end
-      end
+      # here we are looking for any users matching the search expression   
+      # The original approach used Post.all.each to iterate over all of the posts.
+      # But this is very inefficient if the system has millions of posts since all
+      # will be read into memory.
+      # The more efficient approach pointed out by Brandon C. is to use
+      # matching_posts = <class>.where("<field> LIKE #{params[:uname].gsub('*', '%').gsub('?', '_')}")
+      # and furthermore, to protect against SQL injection, it would be
+      # matching_posts = <class>.where("<field> LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
 
-      # now if there are "with comments text" search specified, we
-      # iterate over the search results and REMOVE any posts where
-      # no comments matching are found
       comment_text_to_find = params[:with_comment_text]
       if comment_text_to_find && comment_text_to_find.length > 0
-        @search_results.delete_if do |p|
-          mark_for_delete = true
-          
-          p.comments.each do |c|
-            if c.body.include? comment_text_to_find
-              mark_for_delete = false
-              break
-            end
-          end
-
-          mark_for_delete
-        end
+        # here we wrap the comment searches with %'s so that it becomes a wildcard search
+        # that works with the SQL "LIKE" search.  Note this is different than what we do
+        # with the users search because in users field, we expect user has already put in
+        # wildcards.
+        comment_search_string = "%" + comment_text_to_find + "%"
+      else
+        # otherwise, we know that we're not searching for any comment search.
+        comment_search_string = nil
       end
+
+      if (comment_search_string)
+        @search_results = Post.joins(:creator,:comments).where("users.username LIKE ? AND comments.body LIKE ?", 
+          params[:uname].gsub('*', '%').gsub('?', '_'), comment_search_string)
+      else
+        @search_results = Post.joins(:creator).where("users.username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+        if @with_comments_val == "1"
+          @search_results.delete_if do |p|
+            if p.comments.length > 0
+              false
+            else
+              true
+            end # comments length
+          end #delete_if
+        end #comments_with_val == 1
+      end #else of comment_search_string
 
       # now have to consider how to sort
       

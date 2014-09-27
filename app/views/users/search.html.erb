@@ -3,7 +3,13 @@
 <%= form_tag(search_users_path, :method => "get", class: "well form-inline") do %>
 	<div class="control-group">
 		<%= label_tag(:uname, "Search for user:") %>
-		<%= text_field_tag(:uname, params[:uname] || "<enter search here>") %>
+		<!-- adding support for placeholder text in the field rather than -->
+		<!-- explicitly setting field contents -->
+		<% if params[:uname] %>
+			<%= text_field_tag(:uname, params[:uname], {autofocus: "autofocus"}) %>
+		<% else %>
+			<%= text_field_tag(:uname, nil, {placeholder: "<User Name Search Criteria>", autofocus: "autofocus"}) %>
+		<% end %>
 	</div>
 
 	<div class="control-group">

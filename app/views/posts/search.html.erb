@@ -3,7 +3,14 @@
 <%= form_tag(search_posts_path, :method => "get", class: "well form-inline") do %>
 	<div class="control-group">
 		<%= label_tag(:uname, "Search for posts from a user:") %>
-		<%= text_field_tag(:uname, params[:uname] || "<enter poster name here>") %>
+		<!-- adding support for placeholder text in the field rather than -->
+		<!-- explicitly setting field contents -->
+		<!-- very strange behavior!  The focus seems only set the second time the page is visited!!! -->
+		<% if params[:uname] %>
+			<%= text_field_tag(:uname, params[:uname], autofocus: "autofocus") %>
+		<% else %>
+			<%= text_field_tag(:uname, nil, {placeholder: "<Poster's User Name Search Criteria>", autofocus: "autofocus"}) %>
+		<% end %>
 	</div>
 
 	<div class="control-group">
@@ -13,7 +20,12 @@
 
 	<div class="control-group">
 		<%= label_tag(:with_comment_text, "Containing this in the comment") %>
-		<%= text_field_tag(:with_comment_text, params[:with_comment_text] || "") %>
+
+		<% if params[:with_comment_text] %>
+			<%= text_field_tag(:with_comment_text, params[:with_comment_text]) %>
+		<% else %>
+			<%= text_field_tag(:with_comment_text, nil, placeholder: "<Comment search criteria>") %>
+		<% end %>
 	</div>
 
 	<div class="control-group">
