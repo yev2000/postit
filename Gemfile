@@ -10,7 +10,7 @@ gem 'bootstrap-sass', '~> 2.3.2.0'
 # gem 'therubyracer', platforms: :ruby
 
 gem 'jquery-rails'
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.2'
 gem 'jbuilder', '~> 1.2'
 
 group :doc do
