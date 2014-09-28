@@ -98,7 +98,7 @@ end
 
       if (comment_search_string)
         @search_results = Post.joins(:creator,:comments).where("users.username LIKE ? AND comments.body LIKE ?", 
-          params[:uname].gsub('*', '%').gsub('?', '_'), comment_search_string)
+          params[:uname].gsub('*', '%').gsub('?', '_'), comment_search_string).distinct
       else
         @search_results = Post.joins(:creator).where("users.username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
         if @with_comments_val == "1"

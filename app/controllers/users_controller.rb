@@ -49,7 +49,8 @@ class UsersController < ApplicationController
       		# matching_users = <class>.where("<field> LIKE #{params[:uname].gsub('*', '%').gsub('?', '_')}")
       		# and furthermore, to protect against SQL injection, it would be
       		# matching_posts = <class>.where("<field> LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
-      		@search_results = User.where("username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+      		## @search_results = User.where("username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+      		@search_results = User.where("username LIKE \"#{params[:uname]}\"")
 
       		# If we are also looking for users with at least one post, we need to iterate over the search
       		# results and cull the resulting set by removing ones without any posts.
