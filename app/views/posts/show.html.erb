@@ -18,6 +18,7 @@
 </p>
 <hr/>
 
+<% if logged_in? %>
 	<%= form_for [@post, @comment] do |f| %>
 		<%= render "shared/errors_display", errors_set: @comment.errors %>
 
@@ -28,6 +29,9 @@
 
 		<%= f.submit "Add Comment", class: "btn btn-primary" %>
 	<% end %>
+<% else %>
+	<p style="padding-left: 12px;"><em>Log in to leave comments</em></p>
+<% end %>
 
 <hr/>
 
