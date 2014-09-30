@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-	before_action :set_user, only: [:posts]
+	before_action :set_user, only: [:posts, :show]
 	before_action :set_current_user, only: [:edit, :update]
 
 	def new
@@ -10,7 +10,7 @@ class UsersController < ApplicationController
 	    @user = User.new(user_params)
     
 	    if @user.save
-	      flash[:notice] = "Your user #{@user.username} was saved."
+	      flash[:notice] = "Your user #{@user.username} was created."
 
 	      # this is a bit of a hack, but we redirect to the posts index rather than a (nonexistent)
 	      # users index.
@@ -52,6 +52,9 @@ class UsersController < ApplicationController
       		render :edit
       	end
     	
+	end
+
+	def show
 	end
 
 	def search

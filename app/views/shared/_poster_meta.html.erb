@@ -5,7 +5,7 @@
 
 
 <span class='quiet'><%= var_by %></span>
-<%= link_to var_obj.creator ? var_obj.creator.username : "** No user **", '' %>
+<%= link_to var_obj.creator ? var_obj.creator.username : "** No user **", var_obj.creator ? user_path(var_obj.creator.id) : '' %>
 <% if var_obj.created_at %>
 	<small><%= pretty_posted_time_string(var_obj.created_at).html_safe %></small>&nbsp;&nbsp;&nbsp;
 <% end %>

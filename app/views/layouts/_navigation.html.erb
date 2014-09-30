@@ -37,15 +37,32 @@
 </div>
 
 <% if logged_in? %>
-	<div class="nav_item">
-		<%= current_user_get.username %>
+	<div class="btn-group nav_item">
+		<%= link_to "#", class: "btn btn-small dropdown-toggle", "data-toggle" => "dropdown" do %>
+			<%= ("&nbsp;" + current_user_get.username + "&nbsp;&nbsp;").html_safe %><span class="caret"></span>
+		<% end %>
+
+		<ul class="dropdown-menu">
+			<li>
+				<%= link_to(edit_user_path(get_logged_in_user_id)) do %>
+					<i class='icon-pencil'></i>
+					Edit  Profile
+				<% end %>
+			</li>
+			<li>
+				<%= link_to(user_path(get_logged_in_user_id)) do %>
+					<i class='icon-user'></i>
+					View Profile
+				<% end %>
+			</li>
+			<li>
+				<%= link_to(logout_path) do %>
+					<i class='icon-circle-arrow-left'></i>
+					Logout
+				<% end %>
+			</li>
+		</ul>
 	</div>
-	<div class="nav_item">
-  	<%= link_to "Edit Profile", edit_user_path(get_logged_in_user_id), class: "btn btn-small" %>
-  	</div>
-	<div class="nav_item">
-  	<%= link_to "Sign Out", logout_path, class: "btn btn-small" %>
-  	</div>
 <% else %>
 	<div class="nav_item">
   	<%= link_to "Register", register_path, class: "btn btn-small" %>

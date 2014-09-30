@@ -1,0 +1,33 @@
+<%= render "shared/content_title", title_var: "User Profile Info" %>
+
+<div class='well'>
+  <dl class='dl-horizontal'>
+    <dt>Username:</dt>
+    <dd><%= @user.username %></dd>
+  </dl>
+</div>
+
+<h5><%= "#{@user.username}'s Activity" %></h5>
+
+<% if params[:tab] == "comments" %>
+	<% posts_class = "class=''" %>
+	<% comments_class = "class='active'" %>
+<% else %>
+	<% posts_class = "class='active'" %>
+	<% comments_class = "class=''" %>
+<% end %>
+
+<ul class='nav nav-tabs'>
+  <li <%= posts_class.html_safe %>>
+	<%= link_to("Posts (#{@user.posts.length})", user_path(@user.id)) %>
+  </li>
+  <li <%= comments_class.html_safe %>>	
+	<%= link_to("Comments (#{@user.comments.length})", user_path(@user.id) + "?tab=comments") %>
+  </li>
+</ul>
+
+<% if params[:tab] == "comments" %>
+	<%= render "shared/comment_list", {comments_list: @user.comments, show_post_link: true} %>
+<% else %>
+	<%= render "posts/post_list", post_list: @user.posts %>
+<% end %>
