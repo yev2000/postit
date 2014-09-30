@@ -12,12 +12,20 @@
 						<span>
 							<%= link_to("#{p.comments.size} " + "comment".pluralize(p.comments.size), post_path(p)) %>
 						</span>
-							
-						<span>
-							<div style="padding: 0px;">
-								<%= link_to "Edit Post", edit_post_path(p) %>
-							</div>
-						</span>
+
+						<!-- only show the edit post link as available if -->
+						<!-- the logged in user is the creator of the post -->
+						<!-- otherwise, the user does not have privileges to edit the post -->
+						<!-- In the future, if we have the concept of a superuser or admin -->
+						<!-- perhaps we can give them the right to edit anyone's post. -->
+						<% if current_user_get == p.creator %>
+							<span>
+								<div style="padding: 0px;">
+									<%= link_to "Edit Post", edit_post_path(p) %>
+								</div>
+							</span>
+						<% end %>
+
 					</small>
 				</p>
 			</div>

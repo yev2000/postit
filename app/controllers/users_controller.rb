@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
 	before_action :set_user, only: [:posts]
+	before_action :set_current_user, only: [:edit, :update]
 
 	def new
 		@user = User.new
@@ -17,6 +18,34 @@ class UsersController < ApplicationController
 	    else
 	      render :new
 	    end
+	end
+
+	def edit
+	end
+
+	def update
+		
+		# if password was supplied, then set it
+		form_values = params.require(:user)
+		if form_values
+			if form_values[:password] && form_values[:password].length > 0
+				@user.password = form_values[:password]
+			end
+
+			# if username was changed, try to set it
+			if form_values[:username] && form_values[:username].length > 0
+				@user.username = form_values[:username]
+			end
+		end
+
+		# (will validations make sure duplicate username is not set?)
+		if @user.save
+      		flash[:notice] = "The user \"#{@user.username}\" was updated."
+      		redirect_to root_path
+    	else
+      		render :edit
+      	end
+    	
 	end
 
 	def search
@@ -84,7 +113,11 @@ class UsersController < ApplicationController
 	private
 
     def user_params
-      params.require(:user).permit(:username)
+      params.require(:user).permit(:username, :password)
+    end
+
+    def set_current_user
+    	@user = current_user_get
     end
 
     def set_user

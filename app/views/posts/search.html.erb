@@ -11,6 +11,10 @@
 		<% else %>
 			<%= text_field_tag(:uname, nil, {placeholder: "<Poster's User Name Search Criteria>", autofocus: "autofocus"}) %>
 		<% end %>
+
+		<div id="user_search_help_div"><%= text_field_tag(:uname_help, "?", :id => "user_search_help_field") %></div>
+		<div style="yev_popup_style" id='post_user_help_popup'>Enter text here.  Use * and ? characters for wildcarding.  Example: search for all users with "eth" in their name: *eth*.  Search for users with any leading character followed by "ane": ?ane</div>
+
 	</div>
 
 	<div class="control-group">

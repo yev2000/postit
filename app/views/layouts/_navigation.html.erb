@@ -30,5 +30,12 @@
   <%= link_to "Create New Post", new_post_path, class: "btn btn-success btn-small" %>
   <%= link_to "Search Users", search_users_path, class: "btn btn-small" %>
   <%= link_to "Search Posts", search_posts_path, class: "btn btn-small" %>
-  <%= link_to "Create User", new_user_path, class: "btn btn-small" %>
+  <% if logged_in? %>
+  	<%= current_user_get.username %>
+  	<%= link_to "Edit Profile", edit_user_path(get_logged_in_user_id), class: "btn btn-small" %>
+  	<%= link_to "Sign Out", logout_path, class: "btn btn-small" %>
+  <% else %>
+  	<%= link_to "Register", register_path, class: "btn btn-small" %>
+  	<%= link_to "Sign In", login_path, class: "btn btn-success btn-small" %>
+  <% end %>
 </div>

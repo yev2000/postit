@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+	before_action :require_user
 
 	def create
 				
@@ -11,9 +12,7 @@ class CommentsController < ApplicationController
 
 		@comment = @post.comments.build(comment_params)
 		
-		### at some point we have to hook up to the right user
-		@comment.creator = User.first
-
+		@comment.creator = current_user_get
 		
 		if @comment.save
 			flash[:notice] = "Your comment was saved."

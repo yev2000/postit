@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
 
   before_action :set_post, only: [:show, :edit, :update]
-
+  before_action :require_user, except: [:index, :show]
+  
   def index
   	@posts = Post.all
   end
@@ -21,16 +22,8 @@ class PostsController < ApplicationController
   def create
     @post = Post.new(post_params)
     
-    ### set the user ID of the post to be the poster...
-    ### who is the user?
-    ### TBD : there is no user specified right now so we just pick a user at random
-    begin
-      @post.creator = User.find(rand(User.all.size - 1) + 1)
-    rescue ActiveRecord::RecordNotFound
-      # this should never happen but just in case some IDs are not consecutive, at least
-      # let's fail so that we don't generate an exception
-      @post.creator = User.first
-    end
+    # set the user ID of the post to be the logged in user
+    @post.creator = current_user_get
 
     if @post.save
       flash[:notice] = "Your post was saved."

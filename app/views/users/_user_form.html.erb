@@ -13,6 +13,11 @@
 			<%= f.text_field :username %>
 		</div>
 
+		<div class="control-group">
+			<%= f.label :password %>
+			<%= f.password_field :password %>
+		</div>
+
 		<%= f.submit create_button_string || "Submit", 
 			class: "btn btn-success" %>
 	<% end %>
