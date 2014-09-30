@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-	before_action :set_user, only: [:posts, :show]
-	before_action :set_current_user, only: [:edit, :update]
+	before_action :set_user, only: [:edit, :posts, :show, :update]
+	before_action :require_logged_in_user, only: [:edit, :update]
 
 	def new
 		@user = User.new
@@ -30,7 +30,6 @@ class UsersController < ApplicationController
 	end
 
 	def update
-		
 		# if password was supplied, then set it
 		form_values = params.require(:user)
 		if form_values
@@ -137,5 +136,13 @@ class UsersController < ApplicationController
         redirect_to search_users_path
       end
     end
+
+    def require_logged_in_user
+		if @user != current_user_get
+			flash[:error] = "You cannot edit a different user's profile"
+			redirect_to root_path
+		end
+    end
+
 end
 

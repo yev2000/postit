@@ -1,13 +1,17 @@
+<% show_post_link ||= false %>
+
 <% if comments_list && comments_list.size > 0 %>
 	<h5>Comments:</h5>
 	<% comments_list.each do |c| %>
 		<div class="well span8">
+			<i class="icon-comment"></i>
 			<em>"<%= c.body %>"</em>
-			<% if (local_assigns.has_key? :show_post_link) && show_post_link %>
-			on
-			<%= link_to c.post.title, post_path(c.post.id) %>
-			<%= render "shared/poster_meta", {var_by: "by", var_obj: c} %>
+			<% if show_post_link %>
+				on
+				<%= link_to c.post.title, post_path(c.post.id) %>
 			<% end %>
+			<br/>
+			<%= render "shared/poster_meta", {var_by: "by", var_obj: c} %>
 		</div>
 	<% end %>
 <% end %>

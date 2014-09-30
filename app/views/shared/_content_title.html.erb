@@ -1,5 +1,7 @@
+<% url_var ||= nil %>
+
 <p class="lead">
-	<% if (local_assigns.has_key? :url_var) && url_var %>
+	<% if url_var %>
 		<%= link_to title_var, url_var %>
 	<% else %>
 		<%= title_var %>

@@ -18,6 +18,7 @@ class SessionsController < ApplicationController
 			# try to go where the user was originally going before they
 			# hit the authentication challenge
 			redirect_to_original_action
+			clear_original_action
 		else
 			# create errors
 			flash[:error] = "Invalid username or password"

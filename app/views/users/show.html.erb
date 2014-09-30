@@ -9,20 +9,12 @@
 
 <h5><%= "#{@user.username}'s Activity" %></h5>
 
-<% if params[:tab] == "comments" %>
-	<% posts_class = "class=''" %>
-	<% comments_class = "class='active'" %>
-<% else %>
-	<% posts_class = "class='active'" %>
-	<% comments_class = "class=''" %>
-<% end %>
-
 <ul class='nav nav-tabs'>
-  <li <%= posts_class.html_safe %>>
-	<%= link_to("Posts (#{@user.posts.length})", user_path(@user.id)) %>
+  <li class='<%= "active" if params[:tab].nil? %>'>
+	<%= link_to("Posts (#{@user.posts.length})", user_path(@user)) %>
   </li>
-  <li <%= comments_class.html_safe %>>	
-	<%= link_to("Comments (#{@user.comments.length})", user_path(@user.id) + "?tab=comments") %>
+  <li class='<%= "active" if params[:tab] == "comments" %>'>	
+	<%= link_to("Comments (#{@user.comments.length})", user_path(@user, tab: "comments")) %>
   </li>
 </ul>
 

@@ -25,6 +25,10 @@ class ApplicationController < ActionController::Base
   	@current_user = nil
   end
 
+  def clear_original_action
+    session[:prior_url] = nil
+  end
+
   def redirect_to_original_action
 
     if session[:prior_url]
@@ -46,7 +50,7 @@ class ApplicationController < ActionController::Base
       
 		  redirect_to login_path
     else
-      session[:prior_url] = nil
+      clear_original_action
     end
   end
 
