@@ -14,6 +14,12 @@ class UsersController < ApplicationController
 
 	      # this is a bit of a hack, but we redirect to the posts index rather than a (nonexistent)
 	      # users index.
+
+
+	      # if we want to log the user in, we simply create
+	      # a session for the user implicitly.
+	      session[:userid] = @user.id
+
 	      redirect_to posts_path
 	    else
 	      render :new

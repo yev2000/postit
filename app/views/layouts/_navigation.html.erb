@@ -37,7 +37,9 @@
 </div>
 
 <% if logged_in? %>
-	<%= current_user_get.username %>
+	<div class="nav_item">
+		<%= current_user_get.username %>
+	</div>
 	<div class="nav_item">
   	<%= link_to "Edit Profile", edit_user_path(get_logged_in_user_id), class: "btn btn-small" %>
   	</div>
