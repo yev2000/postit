@@ -1,4 +1,5 @@
 class CommentsController < ApplicationController
+	before_action :set_comment, only: [:vote]
 	before_action :require_user
 
 	def create
@@ -25,7 +26,21 @@ class CommentsController < ApplicationController
 		end
 	end
 
+	def vote
+		record_vote(@comment, current_user_get, params[:vote])
+	end
+
+
 	private
+
+	def set_comment
+    begin
+      @comment = Comment.find(params[:id])
+    rescue ActiveRecord::RecordNotFound
+      flash[:notice] = "There is no comment with ID #{params[:id]}.  Showing all posts instead."
+      redirect_to posts_path
+    end
+  end
 
 	def comment_params
 		params.require(:comment).permit(:body)

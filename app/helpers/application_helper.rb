@@ -20,21 +20,4 @@ module ApplicationHelper
 		" on " + pretty_time_string(date_time) + "&nbsp;&nbsp;&nbsp;&nbsp;(#{time_ago_in_words(date_time)} ago)"
 	end
 
-
-	def total_vote_count(obj)
-		up_vote_count(obj) + down_vote_count(obj)
-	end
-
-	def total_vote_score(obj)
-		up_vote_count(obj) - down_vote_count(obj)
-	end
-
-	def up_vote_count(obj)
-		obj.votes.where(vote: true).size
-	end
-
-	def down_vote_count(obj)
-		obj.votes.where(vote: false).size
-	end
-
 end

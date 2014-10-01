@@ -47,14 +47,17 @@ class PostsController < ApplicationController
   end
 
   def vote
-    v = Vote.create(voteable: @post, creator: current_user_get, vote: params[:vote])
-    if v && v.valid?
-      flash[:notice] = "Your vote was counted"
-    else
-      flash[:notice] = "Your vote was not counted"
-    end
 
-    redirect_to :back
+    record_vote(@post, current_user_get, params[:vote])
+
+#    v = Vote.create(voteable: @post, creator: current_user_get, vote: params[:vote])
+#    if v && v.valid?
+#      flash[:notice] = "Your vote was counted"
+#    else
+#      flash[:notice] = "Your vote was not counted"
+#    end
+#
+#    redirect_to :back
   end
 
 

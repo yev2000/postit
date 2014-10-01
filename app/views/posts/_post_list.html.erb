@@ -1,21 +1,13 @@
 <% if post_list %>
-	<% post_list.each do |p| %>
+	<% post_list.sort_by{|x| total_vote_score(x)}.reverse.each do |p| %>
 		<div class="row">
 
-			<div class="span0 well text-center">
-				<%= link_to vote_post_path(p, vote: true), method: "post" do %>
-					<i class="icon-arrow-up"></i>
-				<% end %>
-				<br/>
-				<% vote_str = "vote".pluralize(total_vote_count(p)) %>
-				<small>
-				<%= "#{total_vote_score(p)} [from #{total_vote_count(p)} #{vote_str}]" %>
-				</small>
-				<br/>
-				<%= link_to vote_post_path(p, vote: false), method: "post" do %>
-					<i class="icon-arrow-down"></i>
-				<% end %>
-			</div>
+			<%= render "shared/vote_controls",
+				{
+					obj_var: p,
+					url_up_var: vote_post_path(p, vote: true), 
+					url_down_var: vote_post_path(p, vote: false)
+				} %>
 
 			<div class="span8 well">
 				<%= render p.categories %>
