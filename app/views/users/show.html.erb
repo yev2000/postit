@@ -11,10 +11,10 @@
 
 <ul class='nav nav-tabs'>
   <li class='<%= "active" if params[:tab].nil? %>'>
-	<%= link_to("Posts (#{@user.posts.length})", user_path(@user)) %>
+    <%= link_to("Posts (#{@user.posts.length})", user_path(@user)) %>
   </li>
   <li class='<%= "active" if params[:tab] == "comments" %>'>	
-	<%= link_to("Comments (#{@user.comments.length})", user_path(@user, tab: "comments")) %>
+    <%= link_to("Comments (#{@user.comments.length})", user_path(@user, tab: "comments")) %>
   </li>
 </ul>
 
