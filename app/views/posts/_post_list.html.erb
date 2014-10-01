@@ -1,9 +1,25 @@
 <% if post_list %>
 	<% post_list.each do |p| %>
 		<div class="row">
+
+			<div class="span0 well text-center">
+				<%= link_to vote_post_path(p, vote: true), method: "post" do %>
+					<i class="icon-arrow-up"></i>
+				<% end %>
+				<br/>
+				<% vote_str = "vote".pluralize(total_vote_count(p)) %>
+				<small>
+				<%= "#{total_vote_score(p)} [from #{total_vote_count(p)} #{vote_str}]" %>
+				</small>
+				<br/>
+				<%= link_to vote_post_path(p, vote: false), method: "post" do %>
+					<i class="icon-arrow-down"></i>
+				<% end %>
+			</div>
+
 			<div class="span8 well">
 				<%= render p.categories %>
-				
+
 				<h4><%= link_to p.title, fix_url(p.url) %></h4>
 				<p><%= p.description %></p>
 				<p>

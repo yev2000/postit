@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
 
-  before_action :set_post, only: [:show, :edit, :update]
+  before_action :set_post, only: [:show, :edit, :update, :vote]
   before_action :require_user, except: [:index, :show, :search]
   
   def index
@@ -31,7 +31,7 @@ class PostsController < ApplicationController
     else
       render :new
     end
-end
+  end
 
   def edit
     # setting @post this is handled by before_action to set the post instance var
@@ -44,6 +44,17 @@ end
     else
       render :edit
     end
+  end
+
+  def vote
+    v = Vote.create(voteable: @post, creator: current_user_get, vote: params[:vote])
+    if v && v.valid?
+      flash[:notice] = "Your vote was counted"
+    else
+      flash[:notice] = "Your vote was not counted"
+    end
+
+    redirect_to :back
   end
 
 

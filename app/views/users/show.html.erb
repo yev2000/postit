@@ -16,10 +16,15 @@
   <li class='<%= "active" if params[:tab] == "comments" %>'>	
     <%= link_to("Comments (#{@user.comments.length})", user_path(@user, tab: "comments")) %>
   </li>
+  <li class='<%= "active" if params[:tab] == "votes" %>'>  
+    <%= link_to("Votes (#{@user.votes.length})", user_path(@user, tab: "votes")) %>
+  </li>
 </ul>
 
 <% if params[:tab] == "comments" %>
 	<%= render "shared/comment_list", {comments_list: @user.comments, show_post_link: true} %>
+<% elsif params[:tab] == "votes" %>
+  <%= render "shared/vote_list", {vote_list: @user.votes} %>
 <% else %>
 	<%= render "posts/post_list", post_list: @user.posts %>
 <% end %>
