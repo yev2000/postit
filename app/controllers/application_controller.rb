@@ -76,7 +76,12 @@ class ApplicationController < ActionController::Base
     if v && v.valid?
       flash[:notice] = "Your vote was counted"
     else
-      flash[:notice] = "Your vote was not counted"
+      if (v && v.errors && v.errors.messages[:creator] &&
+        (v.errors.messages[:creator].index { |msg| msg.include? "already been taken" }))
+          flash[:error] = "You have already voted for this #{v.voteable_type}"
+      else
+        flash[:error] = "Your vote was not counted"
+      end
     end
 
     redirect_to :back
