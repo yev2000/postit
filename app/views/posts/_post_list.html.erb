@@ -1,43 +1,7 @@
 <% if post_list %>
 	<% post_list.sort_by{|x| total_vote_score(x)}.reverse.each do |p| %>
-		<div class="row">
 
-			<%= render "shared/vote_controls",
-				{
-					obj_var: p,
-					url_up_var: vote_post_path(p, vote: true), 
-					url_down_var: vote_post_path(p, vote: false)
-				} %>
+		<%= render "posts/post_entry", {post_var: p} %>
 
-			<div class="span8 well">
-				<%= render p.categories %>
-
-				<h4><%= link_to p.title, fix_url(p.url) %></h4>
-				<p><%= p.description %></p>
-				<p>
-					<%= render "shared/poster_meta", {var_by: "posted by", var_obj: p} %>
-					<small>
-						<span>
-							<%= link_to("#{p.comments.size} " + "comment".pluralize(p.comments.size), post_path(p)) %>
-						</span>
-
-						<!-- only show the edit post link as available if -->
-						<!-- the logged in user is the creator of the post -->
-						<!-- otherwise, the user does not have privileges to edit the post -->
-						<!-- In the future, if we have the concept of a superuser or admin -->
-						<!-- perhaps we can give them the right to edit anyone's post. -->
-						<% if current_user_get == p.creator %>
-							<span>
-								<div style="padding: 0px;">
-									<i class="icon-edit"></i>
-									<%= link_to "Edit Post", edit_post_path(p) %>
-								</div>
-							</span>
-						<% end %>
-
-					</small>
-				</p>
-			</div>
-		</div>
 	<% end %>
 <% end %>

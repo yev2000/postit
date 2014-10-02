@@ -8,25 +8,16 @@
         <%= v.created_at %>
       </div>
 
-      <div class="span8 well">
+      <% if v.voteable_type == "Post" %>
+        <% p = Post.find(v.voteable_id) %>
+        <%= render "posts/post_entry", {post_var: p, show_vote_box: "no"} %>
+      <% elsif v.voteable_type == "Comment" %>
+        <% c = Comment.find(v.voteable_id) %>
+        <%= render "shared/comment_entry", {var_comment: c, show_post_link: true, show_vote_box: "no"} %>
+      <% else %>
+        <p>Unknown object voted on</p>
+      <% end %>
 
-        <% if v.voteable_type == "Post" %>
-          <% p = Post.find(v.voteable_id) %>
-          <h4><%= link_to p.title, fix_url(p.url) %></h4>
-          <p>
-            <%= render "shared/poster_meta", {var_by: "posted by", var_obj: p} %>
-          </p>
-        <% elsif v.voteable_type == "Comment" %>
-          <% c = Comment.find(v.voteable_id) %>
-          <p>
-            <i class="icon-comment"></i>
-            <em>"<%= c.body %>"</em>
-          </p>
-        <% else %>
-          <p>Unknown object voted on</p>
-        <% end %>
-
-      </div>
     </div>
   <% end %>
 <% end %>

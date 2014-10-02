@@ -1,0 +1,42 @@
+<% show_vote_box ||= "yes" %>
+
+<div class="row">
+  <% if show_vote_box == "yes" %>
+    <%= render "shared/vote_controls",
+      {
+        obj_var: post_var,
+        url_up_var: vote_post_path(post_var, vote: true), 
+        url_down_var: vote_post_path(post_var, vote: false)
+      } %>
+  <% end %>
+
+  <div class="span8 well">
+    <%= render post_var.categories %>
+
+    <h4><%= link_to post_var.title, fix_url(post_var.url) %></h4>
+    <p><%= post_var.description %></p>
+    <p>
+      <%= render "shared/poster_meta", {var_by: "posted by", var_obj: post_var} %>
+      <small>
+        <span>
+          <%= link_to("#{post_var.comments.size} " + "comment".pluralize(post_var.comments.size), post_path(post_var)) %>
+        </span>
+
+        <!-- only show the edit post link as available if -->
+        <!-- the logged in user is the creator of the post -->
+        <!-- otherwise, the user does not have privileges to edit the post -->
+        <!-- In the future, if we have the concept of a superuser or admin -->
+        <!-- perhaps we can give them the right to edit anyone's post. -->
+        <% if current_user_get == post_var.creator %>
+          <span>
+            <div style="padding: 0px;">
+              <i class="icon-edit"></i>
+              <%= link_to "Edit Post", edit_post_path(post_var) %>
+            </div>
+          </span>
+        <% end %>
+
+      </small>
+    </p>
+  </div>
+</div>
