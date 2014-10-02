@@ -1,6 +1,13 @@
-<% if post_list %>
-	<% post_list.sort_by{|x| total_vote_score(x)}.reverse.each do |p| %>
+<% sorting_var ||= :implicit %>
 
+<% if post_list %>
+	<% if sorting_var == :implicit %>
+		<% sorted_list = post_list.sort_by{|x| total_vote_score(x)}.reverse %>
+	<% else %>
+		<% sorted_list = post_list %>
+	<% end %>
+
+	<% sorted_list.each do |p| %>
 		<%= render "posts/post_entry", {post_var: p} %>
 
 	<% end %>

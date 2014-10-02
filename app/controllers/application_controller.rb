@@ -96,12 +96,10 @@ class ApplicationController < ActionController::Base
   end
 
   def up_vote_count(obj)
-    ### this could be made more efficient by more direct SQL calls to COUNT
     obj.votes.where(vote: true).size
   end
 
   def down_vote_count(obj)
-    ### this could be made more efficient by more direct SQL calls to COUNT
     obj.votes.where(vote: false).size
   end
 end

@@ -2,41 +2,63 @@
 
 <%= form_tag(search_posts_path, :method => "get", class: "well form-inline") do %>
 	<div class="control-group">
-		<%= label_tag(:uname, "Search for posts from a user:") %>
-		<!-- adding support for placeholder text in the field rather than -->
-		<!-- explicitly setting field contents -->
-		<!-- very strange behavior!  The focus seems only set the second time the page is visited!!! -->
-		<% if params[:uname] %>
-			<%= text_field_tag(:uname, params[:uname], autofocus: "autofocus") %>
-		<% else %>
-			<%= text_field_tag(:uname, nil, {placeholder: "<Poster's User Name Search Criteria>", autofocus: "autofocus"}) %>
-		<% end %>
+		<div class="row">
+			<div class="span3">
+				<%= label_tag(:uname, "Search for posts from a user:") %>
+			</div>
+			<!-- adding support for placeholder text in the field rather than -->
+			<!-- explicitly setting field contents -->
+			<!-- very strange behavior!  The focus seems only set the second time the page is visited!!! -->
+			<div class="span4">
+				<% if params[:uname] %>
+					<%= text_field_tag(:uname, params[:uname], autofocus: "autofocus") %>
+				<% else %>
+					<%= text_field_tag(:uname, nil, {placeholder: "<Poster's User Name Search Criteria>", autofocus: "autofocus"}) %>
+				<% end %>
+			</div>
 
-		<% if false %>
-			<div id="user_search_help_div"><%= text_field_tag(:uname_help, "?", :id => "user_search_help_field") %></div>
-			<div style="yev_popup_style" id='post_user_help_popup'><p><pre>Enter text here.  Use * and ? characters for wildcarding.  Example: search for all users with "eth" in their name: *eth*.  Search for users with any leading character followed by "ane": ?ane</pre></p></div>
-		<% end %>
-		
+			<% if false %>
+				<div id="user_search_help_div"><%= text_field_tag(:uname_help, "?", :id => "user_search_help_field") %></div>
+				<div style="yev_popup_style" id='post_user_help_popup'><p><pre>Enter text here.  Use * and ? characters for wildcarding.  Example: search for all users with "eth" in their name: *eth*.  Search for users with any leading character followed by "ane": ?ane</pre></p></div>
+			<% end %>
+		</div>
 	</div>
 
 	<div class="control-group">
-		<%= label_tag(:with_comments, "With at least one comment") %>
-		<%= check_box_tag(:with_comments, "1", @with_comments_val == "1") %>
+		<div class="row">
+			<div class="span3">
+				<%= label_tag(:with_comments, "With at least one comment") %>
+			</div>
+			<div class="span4">
+				<%= check_box_tag(:with_comments, "1", @with_comments_val == "1") %>
+			</div>
+		</div>
 	</div>
 
 	<div class="control-group">
-		<%= label_tag(:with_comment_text, "Containing this in the comment") %>
-
-		<% if params[:with_comment_text] %>
-			<%= text_field_tag(:with_comment_text, params[:with_comment_text]) %>
-		<% else %>
-			<%= text_field_tag(:with_comment_text, nil, placeholder: "<Comment search criteria>") %>
-		<% end %>
+		<div class="row">
+			<div class="span3">
+				<%= label_tag(:with_comment_text, "Containing this in the comment") %>
+			</div>
+			<div class="span4">
+				<% if params[:with_comment_text] %>
+					<%= text_field_tag(:with_comment_text, params[:with_comment_text]) %>
+				<% else %>
+					<%= text_field_tag(:with_comment_text, nil, placeholder: "<Comment search criteria>") %>
+				<% end %>
+			</div>
+		</div>
 	</div>
 
 	<div class="control-group">
-		<%= label_tag(:sorting, "Sort results by") %>
-		<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
+		<div class="row">
+			<div class="span3">
+				<%= label_tag(:sorting, "Sort results by") %>
+			</div>
+			<div class="span4">
+				<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
+			</div>
+		</div>
 	</div>
 
 	<br>
@@ -55,7 +77,7 @@
 	<% else %>
 		<h4><%= "#{@search_results.size} " + "post".pluralize(@search_results.size) + " found." %></h4>
 
-		<%= render "posts/post_list", post_list: @search_results %>
+		<%= render "posts/post_list", post_list: @search_results, sorting_var: :explicit %>
 	<% end %>
 
 <% end %>

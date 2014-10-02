@@ -64,7 +64,7 @@ class PostsController < ApplicationController
   def search
     # used to search for users
 
-    @sort_options_array = [["Title" , 1], ["Number of Comments", 2]]
+    @sort_options_array = [["Title" , 1], ["Number of Comments", 2], ["Post timestamp", 3], ["Vote Score", 4]]
 
     @search_results = []
     
@@ -126,6 +126,10 @@ class PostsController < ApplicationController
         @search_results.sort! { |x,y| x.title <=> y.title }
       when "Number of Comments"
         @search_results.sort! { |x,y| y.comments.length <=> x.comments.length }
+      when "Post timestamp"
+        @search_results.sort! { |x,y| y.created_at <=> x.created_at }
+      when "Vote Score"
+        @search_results.sort! { |x,y| total_vote_score(y) <=> total_vote_score(x) }
       end
     end
   end
