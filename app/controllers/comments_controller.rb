@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
 	def create
 				
 		begin
-			@post = Post.find(params[:post_id])
+			@post = Post.find_by(slug: params[:post_id])
 		rescue ActiveRecord::RecordNotFound
 			flash[:notice] = "Could not find post with ID #{:post_id}"
 			redirect_to posts_path

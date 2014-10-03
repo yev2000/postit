@@ -137,7 +137,7 @@ class PostsController < ApplicationController
 
     def set_post
       begin
-        @post = Post.find(params[:id])
+        @post = Post.find_by(slug: params[:id])
       rescue ActiveRecord::RecordNotFound
         flash[:notice] = "There is no post with ID #{params[:id]}.  Showing all posts instead."
         redirect_to posts_path
