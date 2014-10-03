@@ -51,7 +51,7 @@ class PostsController < ApplicationController
     # as part of recording the vote, we will update the
     # DOM in place.  So we need to specify what ID we
     # will be updating.  We can construct it
-    record_vote(@post, current_user_get, params[:vote], "post_#{@post.id}_votes")
+    record_vote(@post, current_user_get, params[:vote], "post_#{@post.slug}_votes")
 
   end
 

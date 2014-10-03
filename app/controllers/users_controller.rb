@@ -130,7 +130,7 @@ class UsersController < ApplicationController
 
   def set_user
     begin
-      @user = User.find(params[:id])
+      @user = User.find_by(slug: params[:id])
     rescue ActiveRecord::RecordNotFound
       flash[:notice] = "There is no user with ID #{params[:id]}.  Showing user search instead." 
       redirect_to search_users_path

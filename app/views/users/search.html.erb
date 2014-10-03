@@ -1,30 +1,51 @@
 <%= render "shared/content_title", title_var: "User Search" %>
 
-<%= form_tag(search_users_path, :method => "get", class: "well form-inline") do %>
-	<div class="control-group">
-		<%= label_tag(:uname, "Search for user:") %>
-		<!-- adding support for placeholder text in the field rather than -->
-		<!-- explicitly setting field contents -->
-		<% if params[:uname] %>
-			<%= text_field_tag(:uname, params[:uname], {autofocus: "autofocus"}) %>
-		<% else %>
-			<%= text_field_tag(:uname, nil, {placeholder: "<User Name Search Criteria>", autofocus: "autofocus"}) %>
-		<% end %>
-	</div>
+<div class="row">
+	<%= form_tag(search_users_path, :method => "get", class: "well form-inline span6") do %>
+		<div class="control-group">
+			<div class="row">
+				<div class="span2">
+					<%= label_tag(:uname, "Search for user:") %>
+				</div>
+				
+				<div class="span3">
+					<!-- adding support for placeholder text in the field rather than -->
+					<!-- explicitly setting field contents -->
+					<% if params[:uname] %>
+						<%= text_field_tag(:uname, params[:uname], {autofocus: "autofocus"}) %>
+					<% else %>
+						<%= text_field_tag(:uname, nil, {placeholder: "<User Name Search Criteria>", autofocus: "autofocus"}) %>
+					<% end %>
+				</div>
+			</div>
+		</div>
 
-	<div class="control-group">
-		<%= label_tag(:with_posts, "With at least one post") %>
-		<%= check_box_tag(:with_posts, "1", @with_posts_val == "1") %>
-	</div>
+		<div class="control-group">
+			<div class="row">
+				<div class="span2">
+					<%= label_tag(:with_posts, "With at least one post") %>
+				</div>
+				<div class="span3">
+					<%= check_box_tag(:with_posts, "1", @with_posts_val == "1") %>
+				</div>
+			</div>
+		</div>
 
-	<div class="control-group">
-		<%= label_tag(:sorting, "Sort results by") %>
-		<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
-	</div>
+		<div class="control-group">
+			<div class="row">
+				<div class="span2">
+					<%= label_tag(:sorting, "Sort results by") %>
+				</div>
+				<div class="span3">
+					<%= select_tag(:sorting, options_for_select(@sort_options_array, @sorting_val)) %>
+				</div>
+			</div>
+		</div>
 
-	<br>
-	<%= submit_tag("Search") %>
-<% end %>
+		<br>
+		<%= submit_tag("Search") %>
+	<% end %>
+</div>
 
 <!-- we may already have search results, so display them here -->
 <hr/>
@@ -38,20 +59,23 @@
 	<% else %>
 		<!-- we found at least one match, so let's say so -->
 		<h4><%= "#{@search_results.size} " + "user".pluralize(@search_results.size) + " found." %></h4>
-		<ul>
-		<% @search_results.each do |u| %>
-			<li>
-				<%= "#{u.username} (with " %>
-				<% post_string = "#{u.posts.size} " + "post".pluralize(u.posts.size) %>
-				<% if u.posts.size > 0 %>
-					<%= link_to post_string, posts_user_path(u) %>
-				<% else %>
-					<%= post_string %>
-				<% end %>
-				<%= ")" %>
-			</li>
-		<% end %>
-		</ul>
+		<div class="well span4">
+			<ul>
+			<% @search_results.each do |u| %>
+				<li>
+					<%= link_to u.username, user_path(u) %>
+					(with
+					<% post_string = "#{u.posts.size} " + "post".pluralize(u.posts.size) %>
+					<% if u.posts.size > 0 %>
+						<%= link_to post_string, posts_user_path(u) %>
+					<% else %>
+						<%= post_string %>
+					<% end %>
+					<%= ")" %>
+				</li>
+			<% end %>
+			</ul>
+		</div>
 	<% end %>
 <% end %>
 

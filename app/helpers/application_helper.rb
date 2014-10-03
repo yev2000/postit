@@ -31,4 +31,5 @@ module ApplicationHelper
 	def neutral_voted_entry_color
 		"#E6E6FA"
 	end
+
 end

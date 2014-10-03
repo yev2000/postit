@@ -35,5 +35,5 @@
 
 <hr/>
 
-<%= render "shared/comment_list", {comments_list: @post.comments} %>
+<%= render "shared/comment_list", {comments_list: @post.reload.comments} %>
 

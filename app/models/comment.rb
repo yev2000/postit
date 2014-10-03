@@ -5,6 +5,8 @@ class Comment < ActiveRecord::Base
 
   validates :body, presence: true
   
+
   ### I could not add a validation for creator...
   ### comment.save would always return false
+
 end

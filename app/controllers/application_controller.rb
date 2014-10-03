@@ -109,4 +109,5 @@ class ApplicationController < ActionController::Base
   def down_vote_count(obj)
     obj.votes.where(vote: false).size
   end
+
 end

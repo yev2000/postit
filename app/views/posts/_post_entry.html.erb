@@ -1,13 +1,13 @@
 <% show_vote_box ||= "yes" %>
 
-<div class="row" id="post_entry_<%= post_var.id %>_row">
+<div class="row" id="post_entry_<%= post_var.slug %>_row">
   <% if show_vote_box == "yes" %>
     <%= render "shared/vote_controls",
       {
         obj_var: post_var,
         url_up_var: vote_post_path(post_var, vote: true), 
         url_down_var: vote_post_path(post_var, vote: false),
-        obj_prefix_str_var: "post_#{post_var.id}"
+        obj_prefix_str_var: "post_#{post_var.slug}"
       } %>
   <% end %>
 

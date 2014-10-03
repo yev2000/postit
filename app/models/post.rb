@@ -1,4 +1,6 @@
 class Post < ActiveRecord::Base
+  include Slugger
+
   belongs_to :creator, foreign_key: 'user_id', class_name: 'User'
   has_many :comments
   has_many :post_categories
@@ -11,60 +13,29 @@ class Post < ActiveRecord::Base
   validates :creator, presence: true
   after_validation :generate_slug
 
-  def compute_slug
-    retval = ""
-        
-    if title
-      retval = self.title.gsub(/[^a-zA-Z0-9]/, "-")
-
-      # we have to find if there already exists a slug with this name
-      another_post = Post.find_by(slug: retval)
-      if (another_post)
-        search_str = retval + "(%)"
-        max_suffix_found = 0
-        search_results = Post.where("slug LIKE ?", search_str)
-        search_results.each do |p|
-          if p.slug
-            last_parens_num = p.slug.match(/\([0-9]*\)$/).to_s.gsub('(', '').gsub(')','').to_i
-          else
-            last_parens_num = 0
-          end
-
-          if (last_parens_num && (max_suffix_found < last_parens_num))
-            max_suffix_found = last_parens_num
-          end
-        end
-
-        retval += "(#{max_suffix_found + 1})"
-        return retval
-      else
-        return retval
-      end
-    else
-      nil
-    end
-  end
-
   def generate_slug
-    if self.slug == nil
-      self.slug = self.compute_slug()
-      
-    end
+    # if we want to have slugs that never change
+    # we would do ||= so that once the slug is non-nil, it will never get updated.
+    # In our case here, we always recompute.
+    # there is a problem with this approach is that we may end up
+    # changing the slug suffix number unnecessarily.
+    # this is because the title may have changed by a special character
+    # which would map to the original slug text.  So we need to figure that out.
+    self.slug = compute_slug(self, self.title)
   end
 
   def to_param
     # we override default behavior to allow for string-based slugs
     # rather than the primary key (ID) of the post
-    if self.slug != nil
-      self.slug
-    else
+    if self.slug == nil
       # we have not yet had a chance to construct the slug string, so
       # construct it now and save the post
-      self.slug = self.compute_slug()
-      
+      self.slug = compute_slug(self, self.title)
       self.save
     end
 
+    # now return the slug, because ultimately to_param is looking to get back
+    # the URL component for this instance, which will be the slug
     self.slug
 
   end
