@@ -2,7 +2,9 @@
 
 <% if comments_list && comments_list.size > 0 %>
 	<h5>Comments:</h5>
-	<% comments_list.sort_by{|x| total_vote_score(x)}.reverse.each do |c| %>
-		<%= render "shared/comment_entry", var_comment: c, show_post_link: show_post_link %>
-	<% end %>
+    <div>
+      <% comments_list.sort_by{|x| total_vote_score(x)}.reverse.each do |c| %>
+        <%= render "shared/comment_entry", var_comment: c, show_post_link: show_post_link %>
+      <% end %>
+    </div>
 <% end %>

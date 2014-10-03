@@ -60,13 +60,13 @@
 
 		<ul class="dropdown-menu">
 			<li>
-				<%= link_to(edit_user_path(get_logged_in_user_id)) do %>
+				<%= link_to(edit_user_path(current_user_get)) do %>
 					<i class='icon-pencil'></i>
 					Edit  Profile
 				<% end %>
 			</li>
 			<li>
-				<%= link_to(user_path(get_logged_in_user_id)) do %>
+				<%= link_to(user_path(current_user_get)) do %>
 					<i class='icon-user'></i>
 					View Profile
 				<% end %>

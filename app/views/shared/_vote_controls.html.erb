@@ -3,32 +3,34 @@
 <!-- url_down_var which is the function/helper to generate the right URL for down vote -->
 <!-- and obj_var which is the object for which the voting is being performed -->
 <% if total_vote_score(obj_var) > 0 %>
-  <% box_color = '#CCFF99' %>
+  <% box_color = positive_voted_entry_color() %>
 <% elsif total_vote_score(obj_var) < 0 %>
-  <% box_color = '#FF99FF' %>
+  <% box_color = negative_voted_entry_color() %>
 <% else %>
-  <% box_color = '#E6E6FA' %>
+  <% box_color = neutral_voted_entry_color() %>
 <% end %>
 
-<%= "<div class=\"span2 well text-center\" style=\"background-color: #{box_color};\">".html_safe %>
+<%= "<div id=\"#{obj_prefix_str_var}_votes_box\" vote_score=\"#{total_vote_score(obj_var)}\" class=\"span2 well text-center\" style=\"background-color: #{box_color};\">".html_safe %>
   <% if current_user_get %>
-    <%= link_to url_up_var, method: "post" do %>
+    <%= link_to url_up_var, method: "post", remote: true do %>
       <i class="icon-arrow-up"></i>
     <% end %>
     
   <% end %>
-  <% vote_str = "vote".pluralize(total_vote_count(obj_var)) %>
+  
   <div style="font-size: 18px;">
     <strong>
-      <%= "#{total_vote_score(obj_var)}" %>
+      <span id="<%= obj_prefix_str_var %>_votes">
+        <%= "#{total_vote_score(obj_var)}" %>
+      </span>
     </strong>
     <span class='quiet' style="font-size: 12px;">
-      <em><%= "from #{total_vote_count(obj_var)} #{vote_str}" %></em>
+      <em>from&nbsp;<span id="<%= obj_prefix_str_var %>_votes_total"><%= "#{total_vote_count_string(obj_var)}"%></span></em>
     </span>
   </div>
   <% if current_user_get %>
     
-    <%= link_to url_down_var, method: "post" do %>
+    <%= link_to url_down_var, method: "post", remote: true do %>
       <i class="icon-arrow-down"></i>
     <% end %>
   <% end %>

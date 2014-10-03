@@ -1,11 +1,12 @@
 <% show_vote_box ||= "yes" %>
-<div class="row">
+<div class="row" id="comment_entry_<%= var_comment.id %>_row">
   <% if show_vote_box == "yes" %>
     <%= render "shared/vote_controls",
       {
         obj_var: var_comment,
         url_up_var: vote_post_comment_path(var_comment.post, var_comment, vote: true), 
-        url_down_var: vote_post_comment_path(var_comment.post, var_comment, vote: false)
+        url_down_var: vote_post_comment_path(var_comment.post, var_comment, vote: false),
+        obj_prefix_str_var: "comment_#{var_comment.id}"
       } %>
   <% end %>
 
@@ -14,7 +15,7 @@
     <em>"<%= var_comment.body %>"</em>
     <% if show_post_link %>
       on
-      <%= link_to var_comment.post.title, post_path(var_comment.post.id) %>
+      <%= link_to var_comment.post.title, post_path(var_comment.post) %>
     <% end %>
     <br/>
     <%= render "shared/poster_meta", {var_by: "by", var_obj: var_comment} %>

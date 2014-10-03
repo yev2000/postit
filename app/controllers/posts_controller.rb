@@ -48,16 +48,11 @@ class PostsController < ApplicationController
 
   def vote
 
-    record_vote(@post, current_user_get, params[:vote])
+    # as part of recording the vote, we will update the
+    # DOM in place.  So we need to specify what ID we
+    # will be updating.  We can construct it
+    record_vote(@post, current_user_get, params[:vote], "post_#{@post.id}_votes")
 
-#    v = Vote.create(voteable: @post, creator: current_user_get, vote: params[:vote])
-#    if v && v.valid?
-#      flash[:notice] = "Your vote was counted"
-#    else
-#      flash[:notice] = "Your vote was not counted"
-#    end
-#
-#    redirect_to :back
   end
 
 

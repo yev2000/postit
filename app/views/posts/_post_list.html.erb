@@ -6,9 +6,10 @@
 	<% else %>
 		<% sorted_list = post_list %>
 	<% end %>
-
-	<% sorted_list.each do |p| %>
-		<%= render "posts/post_entry", {post_var: p} %>
-
-	<% end %>
+	
+	<div>
+		<% sorted_list.each do |p| %>
+			<%= render "posts/post_entry", {post_var: p} %>
+		<% end %>
+	</div>
 <% end %>

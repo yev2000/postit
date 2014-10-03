@@ -1,0 +1,69 @@
+// The following approach was outlined for me by Brandon Conway
+// I have elaborated on it, but the fundamental approach of creating
+// an alert div and inserting it close to the "well" near the score field
+// is Brandon's.  Along with the .remove() recommendation.
+<% if flash[:error] %>
+  // clear any existing alerts
+  $('.alert').remove();
+
+  alert = $('<div class="alert alert-error" id="dynamic_flash_div"><%= flash[:error] %><a class="close" data-dismiss="alert">&#215;</a></div>');
+  $('#<%= @score_field %>').closest('div.well').prepend(alert);
+
+<% elsif flash[:notice] %>
+  // clear any existing alerts
+  $('.alert').remove();
+
+  alert = $('<div class="alert alert-notice" id="dynamic_flash_div"><%= flash[:notice] %><a class="close" data-dismiss="alert">&#215;</a></div>');
+  $('#<%= @score_field %>').closest('div.well').prepend(alert);
+  
+<% else %>
+  // no errors or notices, so if any existing alerts
+  // were displayed, let's remove them
+  $('.alert').remove();
+<% end %>
+
+// if any errors or notices were reported, we want to
+// clear them at this time since we've processed the latest
+// request and would not want the flash to be repeated unless
+// some new notice or error is to be reported
+<% flash[:error] = nil %>
+<% flash[:notice] = nil %>
+
+// update the actual text value of the vote count for the object that was voted on
+// we had tagged that string with an ID that @score_field contains.
+$('#<%= @score_field %>').html('<%= total_vote_score(@voteable_obj) %>');
+$('#<%= @score_field %>_total').html('<%= total_vote_count_string(@voteable_obj) %>');
+
+// find the colored-box div that is in the parent this score_field text, so that you can set its vote score
+$('#<%= @score_field %>_box').attr('vote_score', <%= total_vote_score(@voteable_obj) %>);
+
+// the parent of the div that contains the vote score is the "row" that contains both the voting
+// controls AND the comment or post well.
+var reorder_div_row_set = $("[vote_score]").parent();
+
+// code taken from one of the answers in this SO article:
+// http://stackoverflow.com/questions/18847712/sort-divs-bases-on-elements-data-attribute
+// Note this was from http://stackoverflow.com/users/697154/yoshi
+reorder_div_row_set.sort(function (a, b) {
+  return $(b).find("[vote_score]").attr("vote_score") - $(a).find("[vote_score]").attr("vote_score");
+}).each(function (_, container) {
+  $(container).parent().append(container);
+});
+
+reorder_div_row_set.each(function (index) {
+  if (Number($(this).find("[vote_score]").attr("vote_score")) < 0) {
+    $(this).find("[vote_score]").css('background-color', '<%= negative_voted_entry_color() %>');
+  } else if (Number($(this).find("[vote_score]").attr("vote_score")) > 0) {
+    $(this).find("[vote_score]").css('background-color', '<%= positive_voted_entry_color() %>');
+  } else {
+    $(this).find("[vote_score]").css('background-color', '<%= neutral_voted_entry_color() %>');
+  }
+});
+
+// after having reordered and recolored, let's make sure it's scrolled into view
+// Learned from the following SO articles
+// http://stackoverflow.com/questions/9445842/does-scrollintoview-work-in-all-browsers
+// http://stackoverflow.com/questions/4884839/how-do-i-get-a-element-to-scroll-into-view-using-jquery
+// (response posted by http://stackoverflow.com/users/94197/andy-e)
+$('#<%= @score_field %>_box')[0].scrollIntoView();
+

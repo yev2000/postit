@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user_get, :logged_in?, :get_logged_in_user_id, :total_vote_count, :total_vote_score, :record_vote
+  helper_method :current_user_get, :logged_in?, :total_vote_count_string, :total_vote_score, :record_vote
 
   ########################
   #
@@ -17,14 +17,6 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
   	!!(current_user_get)
-  end
-
-  def get_logged_in_user_id
-    if (@current_user)
-      @current_user.id
-    else
-      nil
-    end
   end
 
   def current_user_clear
@@ -71,8 +63,9 @@ class ApplicationController < ActionController::Base
   #
   ########################
 
-  def record_vote(voteable_obj, creator_obj, up_or_down)
+  def record_vote(voteable_obj, creator_obj, up_or_down, dom_id_of_vote_text)
     v = Vote.create(voteable: voteable_obj, creator: creator_obj, vote: up_or_down)
+    
     if v && v.valid?
       flash[:notice] = "Your vote was counted"
     else
@@ -84,7 +77,21 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    redirect_to :back
+    respond_to do |format|
+      format.html {    
+        redirect_to :back
+      }
+
+      format.js { 
+          @score_field = dom_id_of_vote_text
+          @voteable_obj = voteable_obj 
+      }
+    end
+  end
+
+  def total_vote_count_string(obj)
+    t = total_vote_count(obj) 
+    "#{t}" + " vote".pluralize(t)
   end
 
   def total_vote_count(obj)

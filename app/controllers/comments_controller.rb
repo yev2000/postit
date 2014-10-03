@@ -27,7 +27,7 @@ class CommentsController < ApplicationController
 	end
 
 	def vote
-		record_vote(@comment, current_user_get, params[:vote])
+		record_vote(@comment, current_user_get, params[:vote], "comment_#{@comment.id}_votes")
 	end
 
 
