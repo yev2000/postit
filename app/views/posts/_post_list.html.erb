@@ -2,7 +2,7 @@
 
 <% if post_list %>
 	<% if sorting_var == :implicit %>
-		<% sorted_list = post_list.sort_by{|x| total_vote_score(x)}.reverse %>
+		<% sorted_list = post_list.sort_by{|x| x.total_vote_score}.reverse %>
 	<% else %>
 		<% sorted_list = post_list %>
 	<% end %>

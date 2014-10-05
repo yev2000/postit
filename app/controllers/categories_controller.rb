@@ -38,9 +38,8 @@ class CategoriesController < ApplicationController
 	end
 
 	def set_category
-		begin
-			@category = Category.find_by(slug: params[:id])
-		rescue ActiveRecord::RecordNotFound
+		@category = Category.find_by(slug: params[:id])
+		if @category.nil? 
 			flash[:notice] = "There is no category with ID #{params[:id]}.  Showing all posts instead."
 			redirect_to posts_path
 		end

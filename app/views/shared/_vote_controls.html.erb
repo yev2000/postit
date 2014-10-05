@@ -2,15 +2,15 @@
 <!-- url_up_var which is the function/helper to generate the right URL  for up vote -->
 <!-- url_down_var which is the function/helper to generate the right URL for down vote -->
 <!-- and obj_var which is the object for which the voting is being performed -->
-<% if total_vote_score(obj_var) > 0 %>
-  <% box_color = positive_voted_entry_color() %>
-<% elsif total_vote_score(obj_var) < 0 %>
-  <% box_color = negative_voted_entry_color() %>
+<% if obj_var.total_vote_score > 0 %>
+  <% vote_style_by_score = positive_voted_entry_style() %>
+<% elsif obj_var.total_vote_score < 0 %>
+  <% vote_style_by_score = negative_voted_entry_style() %>
 <% else %>
-  <% box_color = neutral_voted_entry_color() %>
+  <% vote_style_by_score = neutral_voted_entry_style() %>
 <% end %>
 
-<%= "<div id=\"#{obj_prefix_str_var}_votes_box\" vote_score=\"#{total_vote_score(obj_var)}\" class=\"span2 well text-center\" style=\"background-color: #{box_color};\">".html_safe %>
+<%= "<div id=\"#{obj_prefix_str_var}_votes_box\" vote_score=\"#{obj_var.total_vote_score}\" class=\"span2 well text-center #{vote_style_by_score}\">".html_safe %>
   <% if current_user_get %>
     <%= link_to url_up_var, method: "post", remote: true do %>
       <i class="icon-arrow-up"></i>
@@ -21,11 +21,11 @@
   <div style="font-size: 18px;">
     <strong>
       <span id="<%= obj_prefix_str_var %>_votes">
-        <%= "#{total_vote_score(obj_var)}" %>
+        <%= "#{obj_var.total_vote_score}" %>
       </span>
     </strong>
     <span class='quiet' style="font-size: 12px;">
-      <em>from&nbsp;<span id="<%= obj_prefix_str_var %>_votes_total"><%= "#{total_vote_count_string(obj_var)}"%></span></em>
+      <em>from&nbsp;<span id="<%= obj_prefix_str_var %>_votes_total"><%= "#{obj_var.total_vote_count_string}"%></span></em>
     </span>
   </div>
   <% if current_user_get %>

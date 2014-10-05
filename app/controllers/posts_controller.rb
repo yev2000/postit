@@ -124,7 +124,7 @@ class PostsController < ApplicationController
       when "Post timestamp"
         @search_results.sort! { |x,y| y.created_at <=> x.created_at }
       when "Vote Score"
-        @search_results.sort! { |x,y| total_vote_score(y) <=> total_vote_score(x) }
+        @search_results.sort! { |x,y| y.total_vote_score <=> x.total_vote_score }
       end
     end
   end
@@ -136,11 +136,10 @@ class PostsController < ApplicationController
     end
 
     def set_post
-      begin
-        @post = Post.find_by(slug: params[:id])
-      rescue ActiveRecord::RecordNotFound
-        flash[:notice] = "There is no post with ID #{params[:id]}.  Showing all posts instead."
-        redirect_to posts_path
+      @post = Post.find_by(slug: params[:id])
+      if @post.nil? 
+        flash[:notice] = "There is no post with ID #{params[:id]}.  Showing post search page instead."
+        redirect_to search_posts_path
       end
     end
 

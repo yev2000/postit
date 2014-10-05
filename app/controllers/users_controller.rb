@@ -129,9 +129,8 @@ class UsersController < ApplicationController
   end
 
   def set_user
-    begin
-      @user = User.find_by(slug: params[:id])
-    rescue ActiveRecord::RecordNotFound
+    @user = User.find_by(slug: params[:id])
+    if @user.nil? 
       flash[:notice] = "There is no user with ID #{params[:id]}.  Showing user search instead." 
       redirect_to search_users_path
     end

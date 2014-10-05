@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user_get, :logged_in?, :total_vote_count_string, :total_vote_score, :record_vote
+  helper_method :current_user_get, :logged_in?, :record_vote
 
   ########################
   #
@@ -84,30 +84,10 @@ class ApplicationController < ActionController::Base
 
       format.js { 
           @score_field = dom_id_of_vote_text
-          @voteable_obj = voteable_obj 
+          @voteable_obj = voteable_obj
       }
     end
   end
 
-  def total_vote_count_string(obj)
-    t = total_vote_count(obj) 
-    "#{t}" + " vote".pluralize(t)
-  end
-
-  def total_vote_count(obj)
-    up_vote_count(obj) + down_vote_count(obj)
-  end
-
-  def total_vote_score(obj)
-    up_vote_count(obj) - down_vote_count(obj)
-  end
-
-  def up_vote_count(obj)
-    obj.votes.where(vote: true).size
-  end
-
-  def down_vote_count(obj)
-    obj.votes.where(vote: false).size
-  end
 
 end

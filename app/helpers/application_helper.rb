@@ -20,16 +20,16 @@ module ApplicationHelper
 		" on " + pretty_time_string(date_time) + "&nbsp;&nbsp;&nbsp;&nbsp;(#{time_ago_in_words(date_time)} ago)"
 	end
 
-	def positive_voted_entry_color
-		"#CCFF99"
+	def positive_voted_entry_style
+		"positive_vote_box"
 	end
 
-	def negative_voted_entry_color
-		"#FF99FF"
+	def negative_voted_entry_style
+		"negative_vote_box"
 	end
 
-	def neutral_voted_entry_color
-		"#E6E6FA"
+	def neutral_voted_entry_style
+		"neutral_vote_box"
 	end
 
 end
