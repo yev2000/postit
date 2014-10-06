@@ -4,7 +4,77 @@ class PostsController < ApplicationController
   before_action :require_user, except: [:index, :show, :search]
   
   def index
-  	@posts = Post.all
+    # if there is no query parameter to display all posts,
+    # just show the top N of the posts
+    if (params[:show_all] == "true")
+    	@posts = Post.all
+    else
+      # query from the database just a subset and the
+      # view partial will also need to offer a link
+      # to show the remainder
+      upvotes_hash = Post.joins(:votes).where("voteable_type = 'Post' AND vote = 't'").group("voteable_id").count
+      downvotes_hash = Post.joins(:votes).where("voteable_type = 'Post' AND vote = 'f'").group("voteable_id").count      
+
+      # now that we have the counts, iterate over the keys in each and get the top vote-getters.
+
+      # first get the union of keys
+      union_of_keys = (upvotes_hash.keys + downvotes_hash.keys).uniq
+
+      # now iterate and create a new hash of the post ID that maps to score
+      score_hash = {}
+      union_of_keys.each do |k|
+        if upvotes_hash[k]
+          score_hash[k] = upvotes_hash[k]
+        else
+          score_hash[k] = 0
+        end
+
+        if downvotes_hash[k]
+          score_hash[k] -= downvotes_hash[k]
+        end
+      end
+
+      posts_indices = []
+
+      # iterate over the score hash and try to insert the posts in order by vote score
+      score_hash.each do |key, value|
+        if posts_indices.size == 0
+          posts_indices[0] = [key, value]
+        else
+          inserted = false
+          posts_indices.each_index do |posts_index|
+            if value > posts_indices[posts_index][1]
+              posts_indices.insert(posts_index, [key, value])
+              inserted = true
+              break;
+            end
+          end
+
+          if inserted == false
+            posts_indices << [key, value]
+          end
+        end # if not first element being iterated on
+      end # iteration over all elements of hash
+
+      # now create post instance array with top N
+
+      @posts = []
+      posts_indices[0..9].each do |entry|
+        @posts << Post.find(entry[0])
+      end
+
+      ## problem is that there could be a bunch of posts that
+      ## did not receive any votes.  In that case, there are no
+      ## entries in the up and down votes hash, yet the
+      ## posts are legitimate to be added to the list.  So
+      ## what do we do?
+      if @posts.size < union_of_keys.size
+        @post_list_truncated = true
+      end
+
+      ## at this point we still don't know if we are missing some
+
+    end
   end
 
   def show

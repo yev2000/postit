@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user_get, :logged_in?, :record_vote
+  helper_method :current_user_get, :logged_in?, :admin_logged_in?, :superadmin_logged_in?, :record_vote
 
   ########################
   #
@@ -17,6 +17,14 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
   	!!(current_user_get)
+  end
+
+  def admin_logged_in?
+    logged_in? && (current_user_get.admin?  || current_user_get.superadmin?)
+  end
+
+  def superadmin_logged_in?
+    logged_in? && (current_user_get.superadmin?)
   end
 
   def current_user_clear
@@ -37,6 +45,15 @@ class ApplicationController < ActionController::Base
       clear_original_action
     end
   end
+
+  def require_admin
+    access_denied unless logged_in? && current_user_get.admin?
+  end
+
+  def require_superadmin
+    access_denied unless logged_in? && current_user_get.superadmin?
+  end
+
   
   ########################
   #
@@ -89,5 +106,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  private
+
+  def access_denied
+    flash[:error] = "You do not have enough privileges to perform this action."
+    redirect_to root_path
+  end
 
 end

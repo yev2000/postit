@@ -14,14 +14,16 @@
 				<%= link_to cat.name, category_path(cat) %>
 			</li>
 		<% end %>
-		<li class="divider"></li>
-		<li>
-			<%= link_to(new_category_path) do %>
-				<!-- whatever is in this block is what is actually displayed for that link -->
-				<i class="icon-plus"></i>
-				New Category
-			<% end %>
-		</li>
+		<% if admin_logged_in? %>
+			<li class="divider"></li>
+			<li>
+				<%= link_to(new_category_path) do %>
+					<!-- whatever is in this block is what is actually displayed for that link -->
+					<i class="icon-plus"></i>
+					New Category
+				<% end %>
+			</li>
+		<% end %>
 	</ul>
 </div>
 

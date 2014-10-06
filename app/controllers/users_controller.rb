@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:edit, :posts, :show, :update]
-  before_action :require_logged_in_user, only: [:edit, :update]
-
+  before_action :require_logged_in_user_or_superadmin, only: [:edit, :update, :admin_edit]
+  
 	def new
 		@user = User.new
 	end
@@ -29,6 +29,16 @@ class UsersController < ApplicationController
 	def edit
 	end
 
+  def admin_edit
+    user = User.find_by(slug: params[:id])
+    if (user.nil?)
+      flash[:notice] = "No user for #{params[:id]} was found."
+      redirect_to root_path
+    else
+      redirect_to edit_user_path(user)
+    end
+  end
+
 	def update
 		# if password was supplied, then set it
 		form_values = params.require(:user)
@@ -41,12 +51,16 @@ class UsersController < ApplicationController
 			if form_values[:username] && form_values[:username].length > 0
 				@user.username = form_values[:username]
 			end
+
+      if form_values[:role]
+        @user.role = form_values[:role]
+      end
 		end
 
 		# (will validations make sure duplicate username is not set?)
 		if @user.save
       flash[:notice] = "The user \"#{@user.username}\" was updated."
-      redirect_to root_path
+      redirect_to user_path(@user)
     else
     	render :edit
     end
@@ -136,8 +150,8 @@ class UsersController < ApplicationController
     end
   end
 
-  def require_logged_in_user
-		if @user != current_user_get
+  def require_logged_in_user_or_superadmin
+		if (@user != current_user_get) && (! superadmin_logged_in?)
  		  flash[:error] = "You cannot edit a different user's profile"
  		  redirect_to root_path
 	  end

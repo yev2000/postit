@@ -25,6 +25,7 @@ PostitTemplate::Application.routes.draw do
   resources :users, only: [:show, :edit, :create, :update] do
   	collection do
   		get "search"
+      get "admin_edit"
     end
 
     member do

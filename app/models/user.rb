@@ -11,6 +11,18 @@ class User < ActiveRecord::Base
   validates :username, presence: true, uniqueness: true
   validates :password, presence: true, on: :create, length: {minimum: 6}
 
+  def admin?
+    self.role == "admin" || self.role == "superadmin"
+  end
+
+  def superadmin?
+    self.role == "superadmin"
+  end
+
+  def moderator?
+    self.role == "moderator"
+  end
+
   def get_field_for_slugging
     self.username
   end

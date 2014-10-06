@@ -13,3 +13,14 @@
 		<% end %>
 	</div>
 <% end %>
+
+<!-- If the params omit a "show all" query then create -->
+<!-- a link to show all of the posts -->
+<% if ((! (params[:show_all] == "true")) && @post_list_truncated) %>
+	<div class="well span4">
+		<h4>Only top <%= post_list.size %> posts by vote score shown</h4>
+		<%= link_to(request.url + "?show_all=true", method: "get") do %>
+			<p>Show all Posts</p>
+		<% end %>
+	</div>
+<% end %>

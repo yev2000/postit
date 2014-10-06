@@ -1,11 +1,36 @@
 <%= render "shared/content_title", {title_var: title_var, url_var: local_assigns[:url_var]} %>
 
+<!-- if the user is a superadmin, allow switching to other -->
+<!-- user views -->
+<% if superadmin_logged_in? %>
+	<div class="well span8 row">
+		<%= form_tag(admin_edit_users_path, :method => "get", class: "well form-inline span6") do %>
+			<div class="control-group">
+				<div class="row">
+					<div class="span2">
+						<%= label_tag(:uname, "Switch to user:") %>
+					</div>
+					
+					<div class="span3">
+						<% edituser = User.find_by(slug: params[:id]) %>
+						<%= select_tag(:id, options_for_select(User.all.map { |u| u.username}, edituser ? edituser.username : nil)) %>
+					</div>
+				</div>
+			</div>
+
+			<br>
+			<%= submit_tag("Switch User") %>
+
+		<% end %>
+	</div>
+<% end %>
+
 <% create_button_string = @user.new_record? ? "Create User" : "Update User" %>
 
 <!-- display error messages -->
 <%= render "shared/errors_display", errors_set: @user.errors %>
 
-<div class="well">
+<div class="well row span6">
 
 	<%= form_for @user do |f| %>
 		<div class="control-group">
@@ -17,6 +42,16 @@
 			<%= f.label :password %>
 			<%= f.password_field :password %>
 		</div>
+
+		<% if superadmin_logged_in? %>
+			<!-- superadmins should not be able to change their own role -->
+			<% if !@user.superadmin? %>
+				<div class="control-group">
+					<%= f.label :role %>
+					<%= f.select(:role, ['user', 'admin', 'moderator']) %>
+				</div>
+			<% end %>
+		<% end %>
 
 		<%= f.submit create_button_string || "Submit", 
 			class: "btn btn-success" %>
