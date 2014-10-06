@@ -6,6 +6,26 @@
 
 module Sluggable
 
+  # alternative to get_field_for_slugging() to be defined in the classes that include this module:
+  # add
+  #     class_attribute: slug_column
+  # to included do...
+  #
+  # In including class, you add
+  #     sluggable_column :tile (for post)
+  #     sluggable_column :name (for category) etc.
+  #
+  # And in the slug code where the appropriate field needs to be referenced
+  #    the_slug = to_slug(self.send(self.class.slug_column.to_sym))
+  #
+  # also in the module:
+  # module ClassMethod
+  #   def sluggable_column(col_name)
+  #    self.slug_column = col_name
+  #   end
+  # end
+  #
+
   extend ActiveSupport::Concern
 
   included do

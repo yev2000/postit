@@ -1,3 +1,7 @@
+// -----------------------------------------------
+// Alerting in-line with Vote "box" for the item being voted on
+// -----------------------------------------------
+
 // The following approach was outlined for me by Brandon Conway
 // I have elaborated on it, but the fundamental approach of creating
 // an alert div and inserting it close to the "well" near the score field
@@ -32,13 +36,19 @@
 <% flash[:error] = nil %>
 <% flash[:notice] = nil %>
 
+// -----------------------------------------------
+// Update the "vote" div for which an up or down
+// vote was clicked.
+// -----------------------------------------------
+
 // update the actual text value of the vote count for the object that was voted on
 // we had tagged that string with an ID that @score_field contains.
 $('#<%= @score_field %>').html('<%= @voteable_obj.total_vote_score %>');
 $('#<%= @score_field %>_total').html('<%= @voteable_obj.total_vote_count_string %>');
 
 // find the colored-box div that is in the parent this score_field text, so that you can set its vote score
-$('#<%= @score_field %>_box').attr('vote_score', <%= @voteable_obj.total_vote_score %>);
+var postit_score_div_box = $('#<%= @score_field %>_box');
+postit_score_div_box.attr('vote_score', <%= @voteable_obj.total_vote_score %>);
 
 // the parent of the div that contains the vote score is the "row" that contains both the voting
 // controls AND the comment or post well.
@@ -53,19 +63,22 @@ reorder_div_row_set.sort(function (a, b) {
   $(container).parent().append(container);
 });
 
-reorder_div_row_set.each(function (index) {
-  $(this).find("[vote_score]").removeClass('<%= positive_voted_entry_style %>');
-  $(this).find("[vote_score]").removeClass('<%= negative_voted_entry_style %>');
-  $(this).find("[vote_score]").removeClass('<%= neutral_voted_entry_style %>');
-  
-  if (Number($(this).find("[vote_score]").attr("vote_score")) < 0) {
-    $(this).find("[vote_score]").addClass('<%= negative_voted_entry_style() %>');
-  } else if (Number($(this).find("[vote_score]").attr("vote_score")) > 0) {
-    $(this).find("[vote_score]").addClass('<%= positive_voted_entry_style() %>');
-  } else {
-    $(this).find("[vote_score]").addClass('<%= neutral_voted_entry_style() %>');
-  }
-});
+// we should be able to recolor JUST the item that was voted on, rather than having to
+// recolor everything.
+// first clear any prior classes related to coloring based on vote score
+postit_score_div_box.removeClass('<%= positive_voted_entry_style %>');
+postit_score_div_box.removeClass('<%= negative_voted_entry_style %>');
+postit_score_div_box.removeClass('<%= neutral_voted_entry_style %>');
+
+// Now based on the new vote score (which we know based on the instance variable)
+// we will add the appropriate class to that vote div box
+<% if @voteable_obj.total_vote_score > 0 %>
+  postit_score_div_box.addClass('<%= positive_voted_entry_style() %>');
+<% elsif @voteable_obj.total_vote_score < 0 %>
+  postit_score_div_box.addClass('<%= negative_voted_entry_style() %>');
+<% else %>
+  postit_score_div_box.addClass('<%= neutral_voted_entry_style() %>');
+<% end %>
 
 // after having reordered and recolored, let's make sure it's scrolled into view
 // Learned from the following SO articles
