@@ -92,6 +92,30 @@ class PostsController < ApplicationController
 
       ## at this point we still don't know if we are missing some
 
+      respond_to do |format|
+        format.html { }   
+
+        format.xml {
+          render :xml => @posts.to_xml(:except => [:id, :user_id], 
+                                       :include => { :comments => 
+                                                      { :except => [:id, :user_id, :created_at, :updated_at], 
+                                                        :include => { :creator => { :except => [:id, :created_at, :updated_at, :password_digest] } }
+                                                        }
+                                                      }
+                                                      )
+
+        }
+        format.json { 
+          render :json => @posts.to_json(:except => [:id, :user_id], 
+                                         :include => { :comments => 
+                                                        { :except => [:id, :user_id, :created_at, :updated_at], 
+                                                          :include => { :creator => { :except => [:id, :created_at, :updated_at, :password_digest] } }
+                                                          }
+                                                        }
+                                                        )
+        }
+      end # format
+
     end
   end
 
@@ -101,6 +125,31 @@ class PostsController < ApplicationController
     # we create a new comment instance variable here because it's needed
     # by the show posts page (the new comment form) and the comments controller create logic.
     @comment = Comment.new
+
+    respond_to do |format|
+      format.html { }   
+
+      format.xml {
+        render :xml => @post.to_xml(:except => [:id, :user_id], 
+                                      :include => { :comments => 
+                                                      { :except => [:id, :user_id, :created_at, :updated_at], 
+                                                        :include => { :creator => { :except => [:id, :created_at, :updated_at, :password_digest] } }
+                                                        }
+                                                      }
+                                                      )
+
+      }
+      format.json { 
+        render :json => @post.to_json(:except => [:id, :user_id], 
+                                      :include => { :comments => 
+                                                      { :except => [:id, :user_id, :created_at, :updated_at], 
+                                                        :include => { :creator => { :except => [:id, :created_at, :updated_at, :password_digest] } }
+                                                        }
+                                                      }
+                                                      )
+      }
+    end
+
   end
 
   def new
@@ -165,46 +214,46 @@ class PostsController < ApplicationController
     end
 
   if params[:uname]
-      # here we are looking for any users matching the search expression   
-      # The original approach used Post.all.each to iterate over all of the posts.
-      # But this is very inefficient if the system has millions of posts since all
-      # will be read into memory.
-      # The more efficient approach pointed out by Brandon C. is to use
-      # matching_posts = <class>.where("<field> LIKE #{params[:uname].gsub('*', '%').gsub('?', '_')}")
-      # and furthermore, to protect against SQL injection, it would be
-      # matching_posts = <class>.where("<field> LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+    # here we are looking for any users matching the search expression   
+    # The original approach used Post.all.each to iterate over all of the posts.
+    # But this is very inefficient if the system has millions of posts since all
+    # will be read into memory.
+    # The more efficient approach pointed out by Brandon C. is to use
+    # matching_posts = <class>.where("<field> LIKE #{params[:uname].gsub('*', '%').gsub('?', '_')}")
+    # and furthermore, to protect against SQL injection, it would be
+    # matching_posts = <class>.where("<field> LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
 
-      comment_text_to_find = params[:with_comment_text]
-      if comment_text_to_find && comment_text_to_find.length > 0
-        # here we wrap the comment searches with %'s so that it becomes a wildcard search
-        # that works with the SQL "LIKE" search.  Note this is different than what we do
-        # with the users search because in users field, we expect user has already put in
-        # wildcards.
-        comment_search_string = "%" + comment_text_to_find + "%"
-      else
-        # otherwise, we know that we're not searching for any comment search.
-        comment_search_string = nil
-      end
+    comment_text_to_find = params[:with_comment_text]
+    if comment_text_to_find && comment_text_to_find.length > 0
+      # here we wrap the comment searches with %'s so that it becomes a wildcard search
+      # that works with the SQL "LIKE" search.  Note this is different than what we do
+      # with the users search because in users field, we expect user has already put in
+      # wildcards.
+      comment_search_string = "%" + comment_text_to_find + "%"
+    else
+      # otherwise, we know that we're not searching for any comment search.
+      comment_search_string = nil
+    end
 
-      if (comment_search_string)
-        @search_results = Post.joins(:creator,:comments).where("users.username LIKE ? AND comments.body LIKE ?", 
-          params[:uname].gsub('*', '%').gsub('?', '_'), comment_search_string).distinct
-      else
-        @search_results = Post.joins(:creator).where("users.username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
-        if @with_comments_val == "1"
-          @search_results.delete_if do |p|
-            if p.comments.length > 0
-              false
-            else
-              true
-            end # comments length
-          end #delete_if
-        end #comments_with_val == 1
-      end #else of comment_search_string
+    if (comment_search_string)
+      @search_results = Post.joins(:creator,:comments).where("users.username LIKE ? AND comments.body LIKE ?", 
+        params[:uname].gsub('*', '%').gsub('?', '_'), comment_search_string).distinct
+    else
+      @search_results = Post.joins(:creator).where("users.username LIKE ?", params[:uname].gsub('*', '%').gsub('?', '_'))
+      if @with_comments_val == "1"
+        @search_results.delete_if do |p|
+          if p.comments.length > 0
+            false
+          else
+            true
+          end # comments length
+        end #delete_if
+      end #comments_with_val == 1
+    end #else of comment_search_string
 
-      # now have to consider how to sort
-      
-      case @sort_options_array.rassoc(@sorting_val)[0]
+    # now have to consider how to sort
+    
+    case @sort_options_array.rassoc(@sorting_val)[0]
       when "Title"
         @search_results.sort! { |x,y| x.title <=> y.title }
       when "Number of Comments"
@@ -214,6 +263,14 @@ class PostsController < ApplicationController
       when "Vote Score"
         @search_results.sort! { |x,y| y.total_vote_score <=> x.total_vote_score }
       end
+    end
+
+    respond_to do |format|
+      format.html { }   
+
+      format.json { 
+        render :json => @search_results
+      }
     end
   end
 

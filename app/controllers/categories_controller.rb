@@ -5,9 +5,24 @@ class CategoriesController < ApplicationController
 	before_action :require_admin, only: [:new, :create]
 
 	def show
+    respond_to do |format|
+	    format.html { }   
+
+	    format.json { 
+	        render :json => @category.to_json(:except => [:id, :created_at, :updated_at])
+      }
+    end
+
 	end
 
 	def index
+    respond_to do |format|
+	    format.html { }   
+
+	    format.json { 
+	        render :json => Category.all.to_json(:except => [:id, :created_at, :updated_at])
+      }
+    end
 	end
 
 	def new
