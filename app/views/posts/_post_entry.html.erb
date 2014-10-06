@@ -28,7 +28,7 @@
         <!-- otherwise, the user does not have privileges to edit the post -->
         <!-- In the future, if we have the concept of a superuser or admin -->
         <!-- perhaps we can give them the right to edit anyone's post. -->
-        <% if current_user_get == post_var.creator %>
+        <% if allow_object_edit?(post_var) %>
           <span>
             <div style="padding: 0px;">
               <i class="icon-edit"></i>

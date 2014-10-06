@@ -1,8 +1,26 @@
 class PostsController < ApplicationController
 
+  # map of permissions needed for actions
+  #          set_post                     require_user                  require creator user or admin
+  #          (@post must be existing)      (a user must be logged in)    (current user must be creator of post or admin)
+  # index           -                          -                               -
+  # show            X                          -                               -
+  # new             -                          X                               -
+  # create          -                          X                               -
+  # edit            X                          *                               X
+  # update          X                          *                               X
+  # vote            X                          X                               -
+  # search          -                          -
+  #
+  # * - technically we can just ask for creator or admin
+  #     but advantage of also calling require_user is that we use
+  #     shared code to flash the right message about needing to be
+  #     logged in and also being able to redirect to prior view.                               -
+
   before_action :set_post, only: [:show, :edit, :update, :vote]
-  before_action :require_user, except: [:index, :show, :search]
-  
+  before_action :require_user, only: [:new, :create, :vote, :edit, :update]
+  before_action :require_creator_or_admin, only: [:edit, :update]
+
   def index
     # if there is no query parameter to display all posts,
     # just show the top N of the posts
@@ -198,19 +216,23 @@ class PostsController < ApplicationController
       end
     end
   end
-  
+
   private
 
-    def post_params
-      params.require(:post).permit(:url, :title, :description, category_ids: [])
-    end
+  def post_params
+    params.require(:post).permit(:url, :title, :description, category_ids: [])
+  end
 
-    def set_post
-      @post = Post.find_by(slug: params[:id])
-      if @post.nil? 
-        flash[:notice] = "There is no post with ID #{params[:id]}.  Showing post search page instead."
-        redirect_to search_posts_path
-      end
+  def set_post
+    @post = Post.find_by(slug: params[:id])
+    if @post.nil? 
+      flash[:notice] = "There is no post with ID #{params[:id]}.  Showing post search page instead."
+      redirect_to search_posts_path
     end
+  end
 
+  def require_creator_or_admin
+    access_denied(post_path (@post), "You cannot edit a different user's post") unless allow_object_edit?(@post)
+  end
+  
 end

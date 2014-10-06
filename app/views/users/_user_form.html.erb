@@ -43,6 +43,11 @@
 			<%= f.password_field :password %>
 		</div>
 
+		<div class="control-group">
+			<%= f.label :time_zone %>
+			<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %>
+		</div>
+
 		<% if superadmin_logged_in? %>
 			<!-- superadmins should not be able to change their own role -->
 			<% if !@user.superadmin? %>

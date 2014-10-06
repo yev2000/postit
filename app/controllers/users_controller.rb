@@ -41,24 +41,25 @@ class UsersController < ApplicationController
 
 	def update
 		# if password was supplied, then set it
-		form_values = params.require(:user)
-		if form_values
-			if form_values[:password] && form_values[:password].length > 0
-				@user.password = form_values[:password]
-			end
+		@user.update(params.require(:user).permit(:username, :password, :time_zone, :role))
 
-			# if username was changed, try to set it
-			if form_values[:username] && form_values[:username].length > 0
-				@user.username = form_values[:username]
-			end
-
-      if form_values[:role]
-        @user.role = form_values[:role]
-      end
-		end
+##		if form_values
+##			if form_values[:password] && form_values[:password].length > 0
+##				@user.password = form_values[:password]
+##			end
+##
+##			# if username was changed, try to set it
+##			if form_values[:username] && form_values[:username].length > 0
+##				@user.username = form_values[:username]
+##			end
+##
+##      if form_values[:role]
+##        @user.role = form_values[:role]
+##      end
+##		end
 
 		# (will validations make sure duplicate username is not set?)
-		if @user.save
+		if @user.valid?
       flash[:notice] = "The user \"#{@user.username}\" was updated."
       redirect_to user_path(@user)
     else
@@ -135,7 +136,7 @@ class UsersController < ApplicationController
 	private
 
   def user_params
-    params.require(:user).permit(:username, :password)
+    params.require(:user).permit(:username, :password, :time_zone)
   end
 
   def set_current_user

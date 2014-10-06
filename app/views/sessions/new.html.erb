@@ -6,15 +6,33 @@
 
 	<%= form_tag("/login", class: "well form-inline") do %>
 		<div class="control-group">
-			<%= label_tag(:username, "Username") %>
-			<%= text_field_tag(:username, @login_username, {placeholder: "<Username>"}) %>
+			<div class="row">
+				<div class="span1">
+					<%= label_tag(:username, "Username") %>
+				</div>
+				<div class="span2">
+					<%= text_field_tag(:username, @login_username, {placeholder: "<Username>", autofocus: "autofocus"}) %>
+				</div>
+			</div>
 		</div>
 		<div class="control-group">
-			<%= label_tag(:password, "Password") %>
-			<%= password_field_tag(:password, nil, {placeholder: "<Password>"}) %>
+			<div class="row">
+				<div class="span1">
+					<%= label_tag(:password, "Password") %>
+				</div>
+				<div class="span2">
+					<%= password_field_tag(:password, nil, {placeholder: "<Password>"}) %>
+				</div>
+			</div>
 		</div>
 
 		<%= submit_tag("Login",	class: "btn btn-success") %>
 	<% end %>
+
+
+		<div class="control-group">
+			<div class="row">
+				<div class="span2">
+
 
 </div>

@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  helper_method :current_user_get, :logged_in?, :admin_logged_in?, :superadmin_logged_in?, :record_vote
+  helper_method :current_user_get, :logged_in?, :admin_logged_in?, :superadmin_logged_in?, :record_vote, :allow_object_edit?
 
   ########################
   #
@@ -46,15 +46,25 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def require_admin
-    access_denied unless logged_in? && current_user_get.admin?
+  def require_admin(path_var = root_path)
+    access_denied(path_var) unless logged_in? && current_user_get.admin?
   end
 
-  def require_superadmin
-    access_denied unless logged_in? && current_user_get.superadmin?
+  def require_superadmin(path_var = root_path)
+    access_denied(path_var) unless logged_in? && current_user_get.superadmin?
   end
 
-  
+  def allow_object_edit?(obj_var)
+    # Can the object be edited by the currently logged in user?
+    # Any object which has a "creator" field can be tested in this way
+    current_user_get && ((current_user_get == obj_var.creator) || (admin_logged_in?))
+  end
+
+  def access_denied(redirect_path, message_text = "You do not have enough privileges to perform this action.")
+    flash[:error] = message_text
+    redirect_to redirect_path
+  end
+
   ########################
   #
   # Redirection
@@ -105,12 +115,4 @@ class ApplicationController < ActionController::Base
       }
     end
   end
-
-  private
-
-  def access_denied
-    flash[:error] = "You do not have enough privileges to perform this action."
-    redirect_to root_path
-  end
-
 end

@@ -5,7 +5,9 @@
     <dt>Username:</dt>
     <dd><%= @user.username %></dd>
     <dt>Role:</dt>
-    <dd><%= @user.role ? @user.role : "None" %></dd>
+    <dd><%= @user.role.blank? ? "None" : @user.role %></dd>
+    <dt>Time Zone:</dt>
+    <dd><%= @user.time_zone.blank? ? "None Set" : @user.time_zone + " (GMT" + ActiveSupport::TimeZone.create(@user.time_zone).formatted_offset(true) + ")" %></dd>
   </dl>
 </div>
 

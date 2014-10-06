@@ -10,7 +10,14 @@ module ApplicationHelper
 	end
 
 	def pretty_time_string(date_time)
-		date_time.localtime.strftime("%B %d, %Y at %I:%M%P %Z")
+		if logged_in? && !current_user_get.time_zone.blank?
+			date_time = date_time.in_time_zone(current_user_get.time_zone)
+		#else
+		#	date_time = date_time.localtime
+		end
+
+		date_time.strftime("%B %d, %Y at %I:%M%P %Z")
+
 	end
 
 	### the use of nbsp does not look correct here.

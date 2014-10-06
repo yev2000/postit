@@ -5,7 +5,7 @@
       <%= "<div class='span0 well text-center' style='#{v.vote == true ? style='background-color: lightgreen;' : style='background-color: #FF66CC;'}'>".html_safe %>
         <%= v.vote == true ? "<i class='icon-thumbs-up'></i>".html_safe : "<i class='icon-thumbs-down'></i>".html_safe %>
         on
-        <%= v.created_at %>
+        <%= pretty_time_string(v.created_at) %>
       </div>
 
       <% if v.voteable_type == "Post" %>

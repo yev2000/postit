@@ -4,7 +4,7 @@
 </p>
 
 <p class="pull-right">
-	<% if current_user_get == @post.creator %>
+	<% if allow_object_edit?(@post) %>
 		[<%= link_to "Edit Post", edit_post_path(@post) %>]
 	<% end %>
 	[<%= link_to "Back to all Posts", posts_path %>]
@@ -16,6 +16,9 @@
 <p>
 	<%= @post.description %>
 </p>
+
+<%= render "shared/poster_meta", {var_by: "posted by", var_obj: @post} %>
+
 <hr/>
 
 <% if logged_in? %>
