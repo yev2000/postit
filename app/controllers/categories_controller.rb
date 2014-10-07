@@ -2,7 +2,7 @@ class CategoriesController < ApplicationController
 
 	before_action :set_category, only: [:show, :edit, :update]
 	before_action :require_user, except: [:index, :show]
-	before_action :require_admin, only: [:new, :create]
+	before_action :require_admin, only: [:new, :edit, :create]
 
 	def show
     respond_to do |format|

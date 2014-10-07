@@ -3,8 +3,8 @@
 <!-- if the user is a superadmin, allow switching to other -->
 <!-- user views -->
 <% if superadmin_logged_in? %>
-	<div class="well span8 row">
-		<%= form_tag(admin_edit_users_path, :method => "get", class: "well form-inline span6") do %>
+	<div class="well span8">
+		<%= form_tag(admin_edit_users_path, :method => "get", class: "span6 form-inline") do %>
 			<div class="control-group">
 				<div class="row">
 					<div class="span2">
@@ -30,72 +30,63 @@
 <!-- display error messages -->
 <%= render "shared/errors_display", errors_set: @user.errors %>
 
-<div class="well row span8 form-inline">
-	<%= form_for @user do |f| %>
-		<div class="control-group span6 row">
-			<%= f.label :username, class: "span2" %>
-			<%= f.text_field :username %>
+<div class="well span8">
+	<%= form_for @user, html: {class: "span6 form-inline"} do |f| %>
+		<div class="control-group">
+      <div class="row">
+        <div class="span1">
+          <%= f.label :username %>
+        </div>
+        <div class="span2">
+			    <%= f.text_field :username %>
+        </div>
+      </div>
 		</div>
 
-		<div class="control-group span6 row">
-			<%= f.label :password, class: "span2" %>
-			<%= f.password_field :password %>
+		<div class="control-group">
+      <div class="row">
+        <div class="span1">
+    			<%= f.label :password %>
+        </div>
+        <div class="span2">
+          <%= f.password_field :password %>
+        </div>
+      </div>
 		</div>
 
-		<div class="control-group span6 row">
-			<%= f.label :time_zone, class: "span2" %>
-			<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, default: Time.zone.name %>
+		<div class="control-group">
+      <div class="row">
+        <div class="span1">
+    			<%= f.label :time_zone %>
+        </div>
+        <div class="span2">
+    			<%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones, default: Time.zone.name %>
+        </div>
+      </div>
 		</div>
 
 		<% if superadmin_logged_in? %>
 			<!-- superadmins should not be able to change their own role    -->
 			<!-- remember that @user is not necessarily the logged-in user. -->
 			<% if !@user.superadmin? %>
-				<div class="control-group span6 row">
-					<%= f.label :role, class: "span2" %>
-					<%= f.select(:role, ['user', 'admin', 'moderator']) %>
-				</div>
+				<div class="control-group">
+          <div class="row">
+            <div class="span1">
+    					<%= f.label :role %>
+            </div>
+            <div class="span2">
+			   		  <%= f.select(:role, ['user', 'admin', 'moderator']) %>
+            </div>
+				  </div>
+        </div>
 			<% end %>
 
 		<% end %>
 		
 		<br>
-		<hr/>
-		<div class="row span8">
-			<%= f.submit create_button_string || "Submit", 
-				class: "btn btn-success" %>
+		<%= f.submit create_button_string || "Submit", class: "btn btn-success" %>
 		</div>
 	<% end %>
 
 </div>
 
-<!--
-<form class="form-horizontal" role="form">
-  <div class="form-group">
-    <label for="inputEmail3" class="col-sm-2 control-label">Email</label>
-    <div class="col-sm-10">
-      <input type="email" class="form-control" id="inputEmail3" placeholder="Email">
-    </div>
-  </div>
-  <div class="form-group">
-    <label for="inputPassword3" class="col-sm-2 control-label">Password</label>
-    <div class="col-sm-10">
-      <input type="password" class="form-control" id="inputPassword3" placeholder="Password">
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox"> Remember me
-        </label>
-      </div>
-    </div>
-  </div>
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      <button type="submit" class="btn btn-default">Sign in</button>
-    </div>
-  </div>
-</form>
--->
